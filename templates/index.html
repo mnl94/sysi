@@ -1,5 +1,26 @@
-<!doctype html>
-<html>
-	Hello, world!
-	<a href="/login">login</a>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+</head>
+<body>
+    <h1>Добро пожаловать!</h1>
+
+    {% if session.get('username') %}
+        <!-- Если пользователь залогинен, показываем приветствие и кнопку выхода -->
+        <p>Привет, {{ session['username'] }}!</p>
+	<p>Роль: {{ session['role'] }}</p>
+        <form action="/api/logout" method="get">
+            <button type="submit">Выйти</button>
+        </form>
+    {% else %}
+        <!-- Если пользователь не залогинен, показываем кнопки для входа и регистрации -->
+        <p>Вы не вошли в систему.</p>
+        <a href="/register"><button>Зарегистрироваться</button></a>
+        <a href="/login"><button>Войти</button></a>
+    {% endif %}
+</body>
 </html>
+

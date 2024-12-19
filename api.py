@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, session
-from funcs import valid_username, valid_password, user_exists, register, get_role
+from funcs import valid_username, valid_password, user_exists, register, get_role, correct_pw
 
 api_blueprint = Blueprint('api', __name__)
 
@@ -15,7 +15,7 @@ def login_api():
                 session['username'] = username
                 session['role'] = role
                 return jsonify({'message': 'Login successful'}), 200
-    return jsonify({'error': 'Invalid username or password'}), 401
+    return jsonify({'error': 'Login Failed'}), 401
 
 
 @api_blueprint.route('/register', methods=['POST'])
@@ -33,8 +33,9 @@ def register_api():
     if user_exists(username):
         return jsonify({'error': 'User already exists'}), 409
 
-    register(username, password)
-    return jsonify({'message': 'Registration successful'}), 201
+    code = register(username, password)
+    if code == 0: return jsonify({'message': 'Registration successful'}), 201
+    return jsonify({'error': 'Unexpected error'}), 500
 
 
 @api_blueprint.route('/logout', methods=['GET'])

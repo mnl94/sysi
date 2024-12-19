@@ -21,12 +21,12 @@
 }
 ```
 
-- ошибка авторизации
+- ошибка
 
    код 401
 ```json
 {
-  "error": "Invalid username or password"
+  "error": "Login Failed"
 }
 ```
 
@@ -65,7 +65,16 @@
    код 400
 ```json
 {
-  "error": "Invalid username" // или "Invalid password"
+  "error": "Invalid username"
+}
+```
+
+- Непредвиденная ошибка
+
+   код 500 
+```json
+{
+  "error": "Unexpected error"
 }
 ```
 
