@@ -34,10 +34,10 @@ def register_api():
         return jsonify({'error': 'User already exists'}), 409
 
     register(username, password)
-    return jsonify({'message': 'User registered successfully'}), 201
+    return jsonify({'message': 'Registration successful'}), 201
 
 
-@api_blueprint.route('/logout', methods=['POST'])
+@api_blueprint.route('/logout', methods=['GET'])
 def logout_api():
     session.pop('username', None)
     session.pop('role', None)
