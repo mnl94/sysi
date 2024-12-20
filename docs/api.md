@@ -2,6 +2,9 @@
 
 ## /api/login
 **Методы:** POST  
+
+**Роль**: Любая
+
 **Принимает:**  
 ```json
 {
@@ -31,7 +34,10 @@
 ```
 
 ## /api/register
-**Методы:** POST  
+**Методы:** POST
+  
+**Роль**: Любая
+
 **Принимает:**  
 ```json
 {
@@ -81,6 +87,8 @@
 ## /api/logout
 **Методы**: GET
 
+**Роль**: Любая
+
 **Возвращает:**
 
 - Успешный выход:
@@ -90,5 +98,44 @@
 ```json
 {
   "message": "Logged out successfully"
+}
+```
+
+
+## /api/getInventoryUser
+**Методы**: GET
+
+**Роль**: user
+
+**Возвращает**:
+
+- Успех:
+
+   код 200
+
+   список списков [ [name1,amount1,itemCondition1], [name2,amount2,itemCondition2] ]
+
+```json
+[
+  [
+    "boots",
+    3,
+    "new"
+  ],
+  [
+    "bat",
+    3,
+    "used"
+  ]
+]
+```
+
+- Не авторизован:
+
+   код 401
+
+```json
+{
+  "error": "Unauthorized"
 }
 ```

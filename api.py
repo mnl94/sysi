@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, session
-from funcs import valid_username, valid_password, user_exists, register, get_role, correct_pw
+from funcs import valid_username, valid_password, user_exists, register, get_role, correct_pw, get_owned_items, get_all_items
 
 api_blueprint = Blueprint('api', __name__)
 
@@ -43,3 +43,22 @@ def logout_api():
     session.pop('username', None)
     session.pop('role', None)
     return jsonify({'message': 'Logged out successfully'}), 200
+
+
+@api_blueprint.route('/getInventoryUser', methods=['GET'])
+def inventory_api_user():
+    username = session.get('username')
+    role = session.get('role')
+    if role == 'user':
+        items = get_owned_items(username)
+        return jsonify(items), 200
+    return jsonify({'error':'Unauthorized'}), 401
+
+
+@api_blueprint.route('/getInventoryAdmin', methods=['GET'])
+def inventory_api_admin():
+    role = session.get('role')
+    if role == 'admin':
+        items = get_all_items()
+        return jsonify(items), 200
+    return jsonify({'error':'Unauthorized'}), 401
