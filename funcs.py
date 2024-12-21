@@ -107,7 +107,14 @@ def get_all_items():
         query = "SELECT name, amount, item_condition, owned_by FROM inventory"
         cursor.execute(query)
         result = cursor.fetchall()
+        for idx, item in enumerate(result):
+            name = item[0]
+            amount = item[1]
+            condition = item[2]
+            owned_by = get_username(item[3])
+            result[idx] = [name,amount,condition,owned_by]
         return result
+
 
 
 

@@ -139,3 +139,45 @@
   "error": "Unauthorized"
 }
 ```
+
+## /api/getInventoryAdmin
+**Методы**: GET
+
+**Роль**: admin
+
+**Возвращает**:
+
+- Успех:
+
+   код 200
+
+   список списков [ [name1,amount1,itemCondition1, ownedBy1], [name2,amount2,itemCondition2, ownedBy2] ]
+
+
+```json
+[
+  [
+    "boots",
+    3,
+    "new",
+    "user1"
+  ],
+  [
+    "balls",
+    3,
+    "used",
+    "user2"
+  ]
+]
+```
+
+- Не авторизован:
+
+   код 401
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
