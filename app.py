@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session
 from api import api_blueprint
 from dotenv import load_dotenv
 import os
@@ -20,6 +20,7 @@ def login_html():
 @app.route('/register')
 def register_html():
     return render_template('register.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

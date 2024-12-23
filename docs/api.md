@@ -177,7 +177,54 @@
 
 ```json
 {
-  "error": "Unauthorized"
+  "error": "No admin permissions"
 }
 ```
 
+
+## /api/addItem
+**Методы**: POST
+
+**Роль**: admin
+
+**Принимает:**  
+
+```json
+{
+  "name": "string",
+  "amount": 3 
+}
+```
+
+**Возвращает**:
+
+- Успех:
+
+   код 200
+
+
+```json
+{
+  "message":"Item added Successfully!"
+}
+```
+
+- Не авторизован:
+
+   код 401
+
+```json
+{
+  "error": "No admin permissions"
+}
+```
+
+- Неизвестная ошибка
+
+   код 500
+
+```json
+{
+  "error": "Unexpected error"
+}
+```

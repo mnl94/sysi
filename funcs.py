@@ -138,3 +138,12 @@ def get_username(id):
         return result[0]
 
     
+def add_item(name,amount):
+    try:
+        with conn.cursor() as cursor:
+            query = "INSERT INTO inventory (name,amount) VALUES (%s,%s)"
+            cursor.execute(query, (name,amount))
+            conn.commit()
+            return 0
+    except Exception as e:
+        return 1

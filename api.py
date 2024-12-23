@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, session
-from funcs import valid_username, valid_password, user_exists, register, get_role, correct_pw, get_owned_items, get_all_items
+from funcs import valid_username, valid_password, user_exists, register, get_role, correct_pw, get_owned_items, get_all_items, add_item
 
 api_blueprint = Blueprint('api', __name__)
 
@@ -61,4 +61,18 @@ def inventory_api_admin():
     if role == 'admin':
         items = get_all_items()
         return jsonify(items), 200
-    return jsonify({'error':'Unauthorized'}), 401
+    return jsonify({'error':'No admin permissions'}), 401
+
+
+@api_blueprint.route('/addItem', methods=['POST'])
+def add_item_api():
+    role = session.get('role')
+    if role == 'admin':
+        data = request.get_json()
+        name = data.get('name')
+        amount = data.get('amount')
+        error = add_item(name, amount)
+        if error == 0:
+            return jsonify({'message':'Item added successfully!'}), 200
+        return jsonify({'error':'Unexpected error'}), 500
+    return jsonify({'error':'No admin permissions'}), 401
