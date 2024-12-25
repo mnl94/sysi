@@ -5,7 +5,6 @@ import mysql.connector
 
 load_dotenv()
 
-BLACKLISTED_CHARACTERS = ['$', '%', '@', '#', '&', '*', '!', '(', ')', '+', '=', '{', '}', '[', ']', ';', ':', ' ']
 
 MYSQL_USER = os.getenv('MYSQL_USER')
 MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
@@ -39,16 +38,6 @@ conn = mysql.connector.connect(
 
 
 
-def valid_username(username):
-    if len(username) > 255: return False
-    for char in BLACKLISTED_CHARACTERS:
-        if char in username: return False
-    return True
-
-
-def valid_password(password):
-    if len(password) < 4: return False
-    return True
 
 
 def user_exists(username):
@@ -95,27 +84,26 @@ def correct_pw(username,password):
 
 def get_owned_items(username):
     with conn.cursor() as cursor:
-        query = "SELECT name, amount, item_condition FROM inventory WHERE owned_by = %s"
-        id = get_id(username)
-        cursor.execute(query,(id,))
+        query = "SELECT id, name, amount, item_condition FROM inventory WHERE owned_by = %s"
+        user_id = get_id(username)
+        cursor.execute(query,(user_id,))
         result = cursor.fetchall()
         return result
 
 
 def get_all_items():
     with conn.cursor() as cursor:
-        query = "SELECT name, amount, item_condition, owned_by FROM inventory"
+        query = "SELECT id, name, amount, item_condition, owned_by FROM inventory"
         cursor.execute(query)
         result = cursor.fetchall()
         for idx, item in enumerate(result):
-            name = item[0]
-            amount = item[1]
-            condition = item[2]
-            owned_by = get_username(item[3])
-            result[idx] = [name,amount,condition,owned_by]
+            item_id = item[0]
+            name = item[1]
+            amount = item[2]
+            condition = item[3]
+            owned_by = get_username(item[4])
+            result[idx] = [item_id, name, amount, condition, owned_by]
         return result
-
-
 
 
 def get_id(username):
@@ -143,6 +131,18 @@ def add_item(name,amount):
         with conn.cursor() as cursor:
             query = "INSERT INTO inventory (name,amount) VALUES (%s,%s)"
             cursor.execute(query, (name,amount))
+            conn.commit()
+            return 0
+    except Exception as e:
+        return 1
+
+
+def change_item(item_id, name, amount, condition, owned_by_username):
+    try:
+        with conn.cursor() as cursor:
+            query = "UPDATE inventory SET name = %s, amount = %s, item_condition = %s, owned_by = %s WHERE id = %s"
+            user_id = get_id(owned_by)
+            cursor.execute(query,(name,amount,condition,user_id,item_id))
             conn.commit()
             return 0
     except Exception as e:

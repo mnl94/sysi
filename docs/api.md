@@ -103,9 +103,12 @@
 
 
 ## /api/getInventoryUser
+
+Возвращает закреплённый за пользователем инвентарь
+
 **Методы**: GET
 
-**Роль**: user
+**Роль**: user, admin
 
 **Возвращает**:
 
@@ -113,16 +116,18 @@
 
    код 200
 
-   список списков [ [name1,amount1,itemCondition1], [name2,amount2,itemCondition2] ]
+   список списков [ [id1,name1,amount1,itemCondition1], [id2,name2,amount2,itemCondition2] ]
 
 ```json
 [
   [
+    1,
     "boots",
     3,
     "new"
   ],
   [
+    2,
     "bat",
     3,
     "used"
@@ -151,18 +156,20 @@
 
    код 200
 
-   список списков [ [name1,amount1,itemCondition1, ownedBy1], [name2,amount2,itemCondition2, ownedBy2] ]
+   список списков [ [id1, name1,amount1,itemCondition1, ownedBy1], [id2, name2,amount2,itemCondition2, ownedBy2] ]
 
 
 ```json
 [
   [
+    1,
     "boots",
     3,
     "new",
     "user1"
   ],
   [
+    2,
     "balls",
     3,
     "used",
@@ -183,6 +190,9 @@
 
 
 ## /api/addItem
+
+Добавляет позицию инвентаря в БД
+
 **Методы**: POST
 
 **Роль**: admin
@@ -216,6 +226,36 @@
 ```json
 {
   "error": "No admin permissions"
+}
+```
+
+- Неправильный json
+
+   код 400
+
+```json
+{
+  "error": "Invalid json provided"
+}
+```
+
+- Неправильное название
+
+   код 400
+
+```json
+{
+  "error": "Invalid or missing name"
+}
+```
+
+- Неправильное количество
+
+   код 400
+
+```json
+{
+  "error": "Invalid or missing amount"
 }
 ```
 

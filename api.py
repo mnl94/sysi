@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, session
-from funcs import valid_username, valid_password, user_exists, register, get_role, correct_pw, get_owned_items, get_all_items, add_item
+from funcs import user_exists, register, get_role, correct_pw, get_owned_items, get_all_items, add_item, change_item
+from validation import valid_username, valid_password, valid_role, valid_item_name, valid_item_amount, valid_item_condition
 
 api_blueprint = Blueprint('api', __name__)
 
@@ -49,7 +50,7 @@ def logout_api():
 def inventory_api_user():
     username = session.get('username')
     role = session.get('role')
-    if role == 'user':
+    if role == 'user' or role == 'admin':
         items = get_owned_items(username)
         return jsonify(items), 200
     return jsonify({'error':'Unauthorized'}), 401
@@ -69,10 +70,26 @@ def add_item_api():
     role = session.get('role')
     if role == 'admin':
         data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Invalid json provided'}), 400
+        
         name = data.get('name')
         amount = data.get('amount')
+        
+        if not valid_item_name(name):
+            return jsonify({'error': 'Invalid or missing name'}), 400
+        
+        if not valid_item_amount(amount):
+            return jsonify({'error': 'Invalid or missing amount'}), 400
+
         error = add_item(name, amount)
         if error == 0:
             return jsonify({'message':'Item added successfully!'}), 200
+        
         return jsonify({'error':'Unexpected error'}), 500
     return jsonify({'error':'No admin permissions'}), 401
+
+
+@api_blueprint.route('/changeItem', methods=['POST'])
+def change_item_api():
+    return jsonify({'message':'Coming soon!'}), 200
