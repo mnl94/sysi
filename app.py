@@ -20,7 +20,13 @@ def login_html():
 @app.route('/register')
 def register_html():
     return render_template('register.html')
-
+    
+@app.route('/inventory')
+def inventory_html():
+    role = session.get('role')
+    if role == 'admin':
+        return render_template('inventory.html')
+    return '<html> Not admin </html>', 401
 
 if __name__ == '__main__':
     app.run(debug=True)

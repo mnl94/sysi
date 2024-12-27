@@ -184,7 +184,7 @@
 
 ```json
 {
-  "error": "No admin permissions"
+  "error": "No admin rights"
 }
 ```
 
@@ -225,7 +225,7 @@
 
 ```json
 {
-  "error": "No admin permissions"
+  "error": "No admin rights"
 }
 ```
 
@@ -256,6 +256,78 @@
 ```json
 {
   "error": "Invalid or missing amount"
+}
+```
+
+- Неизвестная ошибка
+
+   код 500
+
+```json
+{
+  "error": "Unexpected error"
+}
+```
+
+
+## /api/changeItem
+
+Возвращает закреплённый за пользователем инвентарь
+
+**Методы**: POST
+
+**Роль**: admin
+
+**Принимает**:
+```json
+{
+  "item_id": 1,
+  "item_name": "bats",
+  "amount": 42,
+  "condition": "used",
+  "owned_by_user": "user1"
+}
+```
+
+**Возвращает**:
+
+- Успех:
+
+   код 200
+
+```json
+{
+  "message":"Item changed successfully"
+}
+```
+
+- Ошибки валидации
+
+   код 400
+
+```json
+{
+  "error": "Invalid or missing <field_name>"
+}
+```
+
+- Пользователь не существует
+
+   код 400
+
+```json
+{
+  "error": "User does not exist"
+}
+```
+
+- Не авторизован:
+
+   код 401
+
+```json
+{
+  "error": "No admin rights"
 }
 ```
 

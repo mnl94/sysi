@@ -141,9 +141,10 @@ def change_item(item_id, name, amount, condition, owned_by_username):
     try:
         with conn.cursor() as cursor:
             query = "UPDATE inventory SET name = %s, amount = %s, item_condition = %s, owned_by = %s WHERE id = %s"
-            user_id = get_id(owned_by)
+            user_id = get_id(owned_by_username)
             cursor.execute(query,(name,amount,condition,user_id,item_id))
             conn.commit()
             return 0
     except Exception as e:
+        print(e)
         return 1

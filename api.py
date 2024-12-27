@@ -62,7 +62,7 @@ def inventory_api_admin():
     if role == 'admin':
         items = get_all_items()
         return jsonify(items), 200
-    return jsonify({'error':'No admin permissions'}), 401
+    return jsonify({'error':'No admin rights'}), 401
 
 
 @api_blueprint.route('/addItem', methods=['POST'])
@@ -87,9 +87,42 @@ def add_item_api():
             return jsonify({'message':'Item added successfully!'}), 200
         
         return jsonify({'error':'Unexpected error'}), 500
-    return jsonify({'error':'No admin permissions'}), 401
+    return jsonify({'error':'No admin rights'}), 401
 
 
 @api_blueprint.route('/changeItem', methods=['POST'])
 def change_item_api():
-    return jsonify({'message':'Coming soon!'}), 200
+    role = session.get('role')
+    if role == 'admin':
+        data = request.get_json()
+        if not data:
+            return jsonify({'error':'Invalid json provided'}), 400
+
+        item_id = data.get('item_id')
+        item_name = data.get('item_name')
+        amount = data.get('amount')
+        condition = data.get('condition')
+        owned_by_user = data.get('owned_by_user')
+
+        if not valid_item_name(item_name):
+            return jsonify({'error':'Invalid or missing item_name'}), 400
+        
+        if not valid_item_amount(amount):
+            return jsonify({'error':'Invalid or missing amount'}), 400
+
+        if not valid_item_condition(condition):
+            return jsonify({'error':'Invalid or missing condition'}), 400
+
+        if not valid_username(owned_by_user):
+            return jsonify({'error':'Invalid or missing owned_by_user'}), 400
+
+        if not user_exists(owned_by_user):
+            return jsonify({'error':'User does not exist'}), 400
+
+        
+        error = change_item(item_id, item_name, amount, condition, owned_by_user)
+        if error:
+            return jsonify({'error':'Unexpected error'}), 500
+        return jsonify({'message':'Item changed successfully'}), 200
+
+    return jsonify({'error':'No admin rights'}), 401

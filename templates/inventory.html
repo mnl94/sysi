@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Functions</title>
+</head>
+<body>
+    <h1>Test API Functions</h1>
+
+    <!-- Форма для /api/changeItem -->
+    <h2>Test /api/changeItem</h2>
+    <form id="changeItemForm">
+        <label for="change_item_id">Item ID:</label>
+        <input type="number" id="change_item_id" name="item_id" required><br><br>
+
+        <label for="change_item_name">Item Name:</label>
+        <input type="text" id="change_item_name" name="item_name" required><br><br>
+
+        <label for="change_amount">Amount:</label>
+        <input type="number" id="change_amount" name="amount" required><br><br>
+
+        <label for="change_condition">Condition:</label>
+        <input type="text" id="change_condition" name="condition" required><br><br>
+
+        <label for="change_owned_by_user">Owned By User:</label>
+        <input type="text" id="change_owned_by_user" name="owned_by_user" required><br><br>
+
+        <button type="submit">Send Change Item Request</button>
+    </form>
+
+    <!-- Форма для /api/addItem -->
+    <h2>Test /api/addItem</h2>
+    <form id="addItemForm">
+        <label for="add_item_name">Item Name:</label>
+        <input type="text" id="add_item_name" name="name" required><br><br>
+
+        <label for="add_amount">Amount:</label>
+        <input type="number" id="add_amount" name="amount" required><br><br>
+
+        <button type="submit">Send Add Item Request</button>
+    </form>
+
+    <!-- Кнопка для /api/getInventoryUser -->
+    <h2>Test /api/getInventoryUser</h2>
+    <button id="getInventoryUserBtn">Send Get Inventory User Request</button>
+
+    <!-- Кнопка для /api/getInventoryAdmin -->
+    <h2>Test /api/getInventoryAdmin</h2>
+    <button id="getInventoryAdminBtn">Send Get Inventory Admin Request</button>
+
+    <div id="response">
+        <h2>Response:</h2>
+        <pre id="responseText"></pre>
+    </div>
+
+    <script>
+        async function sendRequest(url, method, data = null) {
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: data ? JSON.stringify(data) : null
+                });
+                const responseText = await response.json();
+                document.getElementById('responseText').textContent = JSON.stringify(responseText, null, 2);
+            } catch (error) {
+                document.getElementById('responseText').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        document.getElementById('changeItemForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = {
+                item_id: parseInt(document.getElementById('change_item_id').value, 10),
+                item_name: document.getElementById('change_item_name').value,
+                amount: parseInt(document.getElementById('change_amount').value, 10),
+                condition: document.getElementById('change_condition').value,
+                owned_by_user: document.getElementById('change_owned_by_user').value
+            };
+            sendRequest('/api/changeItem', 'POST', formData);
+        });
+
+        document.getElementById('addItemForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = {
+                name: document.getElementById('add_item_name').value,
+                amount: parseInt(document.getElementById('add_amount').value, 10)
+            };
+            sendRequest('/api/addItem', 'POST', formData);
+        });
+
+        document.getElementById('getInventoryUserBtn').addEventListener('click', () => {
+            sendRequest('/api/getInventoryUser', 'GET');
+        });
+
+        document.getElementById('getInventoryAdminBtn').addEventListener('click', () => {
+            sendRequest('/api/getInventoryAdmin', 'GET');
+        });
+    </script>
+</body>
+</html>
