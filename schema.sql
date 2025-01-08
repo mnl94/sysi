@@ -16,5 +16,30 @@ CREATE TABLE IF NOT EXISTS inventory (
     FOREIGN KEY (owned_by) REFERENCES users(id)
 );
 
+CREATE TABLE IF NOT EXISTS orders (
+    -- планирование и управление закупками инвентаря
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(128) NOT NULL,
+    amount INT NOT NULL,
+    price INT NOT NULL,
+    supplier VARCHAR(128) NOT NULL
+);
 
+CREATE TABLE IF NOT EXISTS inventory_requests (
+    -- заявки на получение инвентаря
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    item_name VARCHAR(128) NOT NULL,
+    request_status ENUM('pending','approved','declined') NOT NULL DEFAULT 'pending', -- отслеживание статуса заявок на получение инвентаря
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
 
+CREATE TABLE IF NOT EXISTS fix_requests (
+    -- заявки о необходимости ремонта или замены инвентаря;
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    item_id INT NOT NULL,
+    request_status ENUM('pending','approved','declined') NOT NULL DEFAULT 'pending',
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (item_id) REFERENCES inventory(id)
+);
