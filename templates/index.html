@@ -3,25 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная страница</title>
+    <title>SYSI - Главная</title>
+    <link rel="stylesheet" href="/static/css/indexStyles.css">
 </head>
 <body>
-    <h1>Добро пожаловать!</h1>
-
-    {% if session.get('username') %}
-        <!-- Если пользователь залогинен, показываем приветствие и кнопку выхода -->
-        <p>Привет, {{ session['username'] }}!</p>
-	<p>Роль: {{ session['role'] }}</p>
-        <form action="/api/logout" method="get">
-            <button type="submit">Выйти</button>
-        </form>
-    {% else %}
-        <!-- Если пользователь не залогинен, показываем кнопки для входа и регистрации -->
-        <p>Вы не вошли в систему.</p>
-        <a href="/register"><button>Зарегистрироваться</button></a>
-        <a href="/login"><button>Войти</button></a>
-    {% endif %}
-    <!-- Мне нужна психологическая помощь -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="/" class="references">Главная</a>
+            </div>
+            <nav>
+                {% if session.get('username') %}
+                    <a href="/inventory" class="references">Инвентарь</a>
+                    <form action="/api/logout" method="get" style="display:inline;">
+                        <button type="submit" class="references">Выйти</button>
+                    </form>
+                {% else %}
+                    <a href="/login" class="references">Войти</a>
+                    <a href="/register" class="references">Регистрация</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+    <main>
+        <h1>SYSI</h1>
+        <p>Система управления спортивного инвентаря</p>
+    </main>
+    <footer>
+        {% if session.get('username') %}
+            <p class="left">Привет!</p>
+            <p class="center"><strong>Твой Логин: {{ session['username'] }}</strong></p>
+            <p class="right">
+                {% if session['role'] == 'admin' %}
+                    Твоя Роль: Администратор
+                {% else %}
+                    Твоя Роль: Пользователь
+                {% endif %}
+            </p>
+        {% else %}
+            <p class="center">Вы не вошли в систему.</p>
+        {% endif %}
+    </footer>
 </body>
 </html>
-
