@@ -1,23 +1,25 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход</title>
+    <link rel="stylesheet" href="/static/css/registerAndLoginStyles.css">
 </head>
 <body>
-    <h1>Вход</h1>
-    <a href="/">На главную</a>
-    <form id="login-form">
-        <label for="username">Имя пользователя:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        
-        <label for="password">Пароль:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        
-        <button type="submit">Войти</button>
-    </form>
-    <p id="login-message"></p>
+    <div class="container">
+        <div class="box">
+            <h2>Вход</h2>
+            <form id="login-form">
+                <label for="username">Логин</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit" class="login_button">Войти</button>
+            </form>
+            <p id="login-message"></p>
+        </div>
+    </div>
 
     <script>
         document.getElementById('login-form').addEventListener('submit', async function(event) {
@@ -37,14 +39,16 @@
             const data = await response.json();
             const messageElement = document.getElementById('login-message');
             if (response.status === 200) {
-                messageElement.textContent = data.message;
-                messageElement.style.color = 'green';
+                messageElement.textContent = "Вход успешен!";
+                messageElement.style.color = '#21a645';
+                setTimeout(function() {
+                    window.location.href = '/';
+                }, 3000);
             } else {
-                messageElement.textContent = data.error;
-                messageElement.style.color = 'red';
+                messageElement.textContent = "Неправильный логин или пароль.";
+                messageElement.style.color = '#a62135';
             }
         });
     </script>
 </body>
 </html>
-

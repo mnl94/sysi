@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
+    <link rel="stylesheet" href="/static/css/registerAndLoginStyles.css">
 </head>
 <body>
-    <h1>Регистрация</h1>
-    <form id="register-form">
-        <label for="username">Имя пользователя:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        
-        <label for="password">Пароль:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        
-        <button type="submit">Зарегистрироваться</button>
-    </form>
-    <p id="register-message"></p>
+    <div class="container">
+        <div class="box">
+            <h2>Регистрация</h2>
+            <form id="register-form">
+                <label for="username">Логин</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit" class="register_button">Зарегистрироваться</button>
+            </form>
+            <p id="register-message"></p>
+        </div>
+    </div>
 
     <script>
         document.getElementById('register-form').addEventListener('submit', async function(event) {
@@ -36,14 +39,13 @@
             const data = await response.json();
             const messageElement = document.getElementById('register-message');
             if (response.status === 201) {
-                messageElement.textContent = data.message;
-                messageElement.style.color = 'green';
+                messageElement.textContent = "Регистрация успешна!";
+                messageElement.style.color = '#21a645';
             } else {
-                messageElement.textContent = data.error;
-                messageElement.style.color = 'red';
+                messageElement.textContent = "Неправильный логин или пароль.";
+                messageElement.style.color = '#a62135';
             }
         });
     </script>
 </body>
 </html>
-
