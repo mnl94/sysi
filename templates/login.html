@@ -41,11 +41,8 @@
             if (response.status === 200) {
                 messageElement.textContent = "Вход успешен!";
                 messageElement.style.color = '#21a645';
-                setTimeout(function() {
-                    window.location.href = '/';
-                }, 3000);
             } else {
-                messageElement.textContent = "Неправильный логин или пароль.";
+                messageElement.textContent = "Что-то не так, ошибка", data.error;
                 messageElement.style.color = '#a62135';
             }
         });

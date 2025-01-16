@@ -15,8 +15,8 @@
             <nav>
                 {% if session.get('username') %}
                     <a href="/inventory" class="references">Инвентарь</a>
-                    <form action="/api/logout" method="get" style="display:inline;">
-                        <button type="submit" class="references">Выйти</button>
+                    <form id="logout-form" style="display:inline;">
+                        <button type="button" id="logout-button" class="references">Выйти</button>
                     </form>
                 {% else %}
                     <a href="/login" class="references">Войти</a>
@@ -44,5 +44,15 @@
             <p class="center">Вы не вошли в систему.</p>
         {% endif %}
     </footer>
+    <script>
+        document.getElementById('logout-button').addEventListener('click', async function () {
+            const response = await fetch('/api/logout', { method: 'GET' });
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Ошибка при выходе');
+            }
+        });
+    </script>
 </body>
 </html>

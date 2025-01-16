@@ -42,7 +42,7 @@
                 messageElement.textContent = "Регистрация успешна!";
                 messageElement.style.color = '#21a645';
             } else {
-                messageElement.textContent = "Неправильный логин или пароль.";
+                messageElement.textContent = "Что-то не так, ошибка", data.error;
                 messageElement.style.color = '#a62135';
             }
         });

@@ -3,57 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test API Functions</title>
+    <title>Инвентарь</title>
+    <link rel="stylesheet" href="/static/css/inventoryStyles.css">
 </head>
 <body>
-    <h1>Test API Functions</h1>
-
-    <!-- Форма для /api/changeItem -->
-    <h2>Test /api/changeItem</h2>
-    <form id="changeItemForm">
-        <label for="change_item_id">Item ID:</label>
-        <input type="number" id="change_item_id" name="item_id" required><br><br>
-
-        <label for="change_item_name">Item Name:</label>
-        <input type="text" id="change_item_name" name="item_name" required><br><br>
-
-        <label for="change_amount">Amount:</label>
-        <input type="number" id="change_amount" name="amount" required><br><br>
-
-        <label for="change_condition">Condition:</label>
-        <input type="text" id="change_condition" name="condition" required><br><br>
-
-        <label for="change_owned_by_user">Owned By User:</label>
-        <input type="text" id="change_owned_by_user" name="owned_by_user" required><br><br>
-
-        <button type="submit">Send Change Item Request</button>
-    </form>
-
-    <!-- Форма для /api/addItem -->
-    <h2>Test /api/addItem</h2>
-    <form id="addItemForm">
-        <label for="add_item_name">Item Name:</label>
-        <input type="text" id="add_item_name" name="name" required><br><br>
-
-        <label for="add_amount">Amount:</label>
-        <input type="number" id="add_amount" name="amount" required><br><br>
-
-        <button type="submit">Send Add Item Request</button>
-    </form>
-
-    <!-- Кнопка для /api/getInventoryUser -->
-    <h2>Test /api/getInventoryUser</h2>
-    <button id="getInventoryUserBtn">Send Get Inventory User Request</button>
-
-    <!-- Кнопка для /api/getInventoryAdmin -->
-    <h2>Test /api/getInventoryAdmin</h2>
-    <button id="getInventoryAdminBtn">Send Get Inventory Admin Request</button>
-
-    <div id="response">
-        <h2>Response:</h2>
-        <pre id="responseText"></pre>
+    <h1>Инвентарь 
+    {% if session['role'] == 'admin' %}
+    Администратора
+    {% else %}
+    Пользователя
+    {% endif %}
+    </h1>
+    <div class="container">
+        <h2>Изменить предмет</h2>
+        <form class="forma" id="changeItemForm">
+            <div class="row-container">
+                <div>
+                    <label for="change_item_id">ID</label>
+                    <input type="number" id="change_item_id" name="item_id" required>
+                </div>
+                <div>
+                    <label for="change_item_name">Имя</label>
+                    <input type="text" id="change_item_name" name="item_name" required>
+                </div>
+                <div>
+                    <label for="change_amount">Кол-во</label>
+                    <input type="number" id="change_amount" name="amount" required>
+                </div>
+                <div>
+                    <label for="change_condition">Состояние</label>
+                    <input type="text" id="change_condition" name="condition" required>
+                </div>
+                <div>
+                    <label for="change_owned_by_user">Принадлежность</label>
+                    <input type="text" id="change_owned_by_user" name="owned_by_user" required>
+                </div>
+            </div>
+            <button type="submit">Отправить запрос</button>
+        </form>
     </div>
-
+    <div class="container">
+        <h2>Добавить предмет</h2>
+        <form class="forma" id="addItemForm">
+            <div class="row-container">
+                <div>
+                    <label for="add_item_name">Имя</label>
+                    <input type="text" id="add_item_name" name="name" required>
+                </div>
+                <div>
+                    <label for="add_amount">Количество</label>
+                    <input type="number" id="add_amount" name="amount" required>
+                </div>
+            </div>
+            <button type="submit">Отправить запрос</button>
+    </form>
+    </div>
     <script>
         async function sendRequest(url, method, data = null) {
             try {
