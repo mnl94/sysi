@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+    background-color: #2f4b4c;
+    color: #182c2b;
+}
+h1 {
+    text-align: center;
+    padding-top: 30px;
+    color: #f7fce6;
+}
+.container {
+    width: 100%;
+    max-width: 1500px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #182c2b;
+    border-radius: 10px;
+    background-color: #f7fce6;
+    text-align: center;
+}
+.container h2 {
+    font-size: 25px;
+    color: #182c2b;
+    margin-bottom: 20px;
+}
+.forma {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.row-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    width: 100%;
+}
+.forma label {
+    font-size: 12px;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+    color: #182c2b;
+}
+.forma input {
+    padding: 8px;
+    font-size: 15px;
+    border: 1px solid #182c2b;
+    border-radius: 5px;
+    width: 160px;
+    box-sizing: border-box;
+
+}
+.forma button {
+    padding: 10px 20px;
+    font-size: 15px;
+    color: #f7fce6;
+    background-color: #182c2b;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.forma button:hover {
+    background-color: #2f4b4c;
+    transform:scale(1.01);
+    transition:ease-in .5s;
+}
+
+.inventory-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.inventory-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2f4b4c;
+    color: #f7fce6;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.inventory-item div {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+}
+
+.inventory-item label {
+    font-weight: bold;
+}
