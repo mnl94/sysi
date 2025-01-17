@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, session
-from funcs import user_exists, register, get_role, correct_pw, get_owned_items, get_all_items, add_item, change_item
+from funcs import user_exists, register, get_role, correct_pw, get_owned_items, get_all_items, add_item, change_item, item_exists, item_owned_by
 from validation import valid_username, valid_password, valid_role, valid_item_name, valid_item_amount, valid_item_condition
 
 api_blueprint = Blueprint('api', __name__)
@@ -134,3 +134,27 @@ def change_item_api():
         return jsonify({'message':'Item changed successfully'}), 200
 
     return jsonify({'error':'No admin rights'}), 401
+
+
+@api_blueprint.route('/requestFix', methods=['POST'])
+def request_fix_api():
+    role = session.get('role')
+    username = session.get('username')
+    if role == 'admin' or role == 'user':
+        data = request.get_json()
+        user_id = get_id(username)
+        if not data:
+            return jsonify({'error':'Invalid json provided'}), 400
+
+        item_id = data.get('item_id')
+        
+        if not valid_id(item_id):
+            return jsonify({'error':'Invalid or missing item_id'})
+        if item_exists(item_id):
+            if item_owned_by(item_id) == user_id:
+                createFixRequest(item_id, user_id)
+                return jsonify({'message':'Request created'}), 200
+        return jsonify({'error':'Item does not exist or you are not the owner'}), 400
+    return jsonify({'error':'Unauthorized'}), 401
+        
+

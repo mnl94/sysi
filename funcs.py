@@ -42,8 +42,16 @@ conn = mysql.connector.connect(
 
 def user_exists(username):
     with conn.cursor() as cursor:
-        query = "SELECT username FROM users WHERE username=%s"
+        query = "SELECT id FROM users WHERE username=%s"
         cursor.execute(query, (username,))
+        result = cursor.fetchone()
+        return True if result else False
+
+
+def item_exists(item_id):
+    with conn.cursor() as cursor:
+        query = "SELECT id FROM inventory WHERE id=%s"
+        cursor.execute(query, (item_id,))
         result = cursor.fetchone()
         return True if result else False
 
@@ -149,3 +157,14 @@ def change_item(item_id, name, amount, condition, owned_by_username):
     except Exception as e:
         print(e)
         return 1
+
+
+def item_owned_by(item_id):
+    with conn.cursor() as cursor:
+        query = "SELECT owned_by FROM inventory WHERE id = %s"
+        cursor.execute(query, (id,))
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        return result[0]
+

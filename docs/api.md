@@ -341,3 +341,61 @@
   "error": "Unexpected error"
 }
 ```
+
+## /api/requestFix
+
+создаёт запрос на починку инвентаря
+
+**Методы**: POST
+
+**Роль**: user, admin
+
+**Принимает:**  
+
+```json
+{
+  "item_id": 1,
+}
+```
+
+**Возвращает**:
+
+- Успех:
+
+   код 200
+
+```json
+{
+  "message":"Request created"
+}
+```
+
+- Ошибки валидации
+
+   код 400
+
+```json
+{
+  "error": "Invalid or missing <field_name>"
+}
+```
+
+- Предмета не существует или вы не владелец предмета
+
+   код 400
+
+```json
+{
+  "error": "Item does not exist or you are not the owner"
+}
+```
+
+- Не авторизован:
+
+   код 401
+
+```json
+{
+  "error": "Unauthorized"
+}
+
