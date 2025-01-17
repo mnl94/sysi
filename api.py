@@ -116,7 +116,9 @@ def change_item_api():
         if not valid_username(owned_by_user):
             return jsonify({'error':'Invalid or missing owned_by_user'}), 400
 
-        if not user_exists(owned_by_user):
+        if owned_by_user == 'null':
+            owned_by_user = None #kostyl
+        elif not user_exists(owned_by_user):
             return jsonify({'error':'User does not exist'}), 400
 
         
