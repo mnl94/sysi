@@ -56,8 +56,18 @@
                 </div>
             </div>
             <button type="submit">Отправить запрос</button>
-    </form>
+        </form>
     </div>
+    <div class="container">
+        <h2>Получить все инвентари всех пользователей</h2>
+        <form class="forma">
+            <button type="button" id="getInventoryAdmin">Отправить запрос</button>
+        </form>
+        <div id="inventoryContainer" class="inventory-list">
+        </div>
+        <button type="button" id="loadMoreBtn" style="display: none;">Загрузить ещё</button>
+    </div>
+
     <script>
         async function sendRequest(url, method, data = null) {
             try {
@@ -75,6 +85,52 @@
             }
         }
 
+        function renderInventoryItems(items) {
+            const container = document.getElementById('inventoryContainer');
+            container.innerHTML = '';
+
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('inventory-item');
+
+                itemDiv.innerHTML = `
+                    <div>
+                        <label>ID:</label>
+                        <span>${item[0]}</span>
+                    </div>
+                    <div>
+                        <label>Название:</label>
+                        <span>${item[1]}</span>
+                    </div>
+                    <div>
+                        <label>Количество:</label>
+                        <span>${item[2]}</span>
+                    </div>
+                    <div>
+                        <label>Состояние:</label>
+                        <span>${item[3]}</span>
+                    </div>
+                    <div>
+                        <label>Принадлежность:</label>
+                        <span>${item[4]}</span>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+        async function fetchInventoryAdmin() {
+            try {
+                const response = await fetch('/api/getInventoryAdmin');
+                if (!response.ok) {
+                    throw new Error(`Ошибка: ${response.statusText}`);
+                }
+                const data = await response.json();
+                renderInventoryItems(data);
+            } catch (error) {
+                console.error('Ошибка при загрузке данных:', error.message);
+            }
+        }
+        document.getElementById('getInventoryAdmin').addEventListener('click', fetchInventoryAdmin);
         document.getElementById('changeItemForm').addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = {
@@ -94,14 +150,6 @@
                 amount: parseInt(document.getElementById('add_amount').value, 10)
             };
             sendRequest('/api/addItem', 'POST', formData);
-        });
-
-        document.getElementById('getInventoryUserBtn').addEventListener('click', () => {
-            sendRequest('/api/getInventoryUser', 'GET');
-        });
-
-        document.getElementById('getInventoryAdminBtn').addEventListener('click', () => {
-            sendRequest('/api/getInventoryAdmin', 'GET');
         });
     </script>
 </body>
