@@ -201,8 +201,9 @@
 
 ```json
 {
-  "name": "string",
-  "amount": 3 
+  "item_name": "string",
+  "amount": 3 ,
+  "owned_by": "string"
 }
 ```
 

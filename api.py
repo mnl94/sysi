@@ -73,16 +73,22 @@ def add_item_api():
         if not data:
             return jsonify({'error': 'Invalid json provided'}), 400
         
-        name = data.get('name')
+        item_name = data.get('item_name')
         amount = data.get('amount')
+        owned_by_username = data.get('owned_by')
         
-        if not valid_item_name(name):
-            return jsonify({'error': 'Invalid or missing name'}), 400
+        if not valid_item_name(item_name):
+            return jsonify({'error': 'Invalid or missing item_name'}), 400
         
         if not valid_item_amount(amount):
             return jsonify({'error': 'Invalid or missing amount'}), 400
+        
+        if owned_by_username == 'null':
+            owned_by_username = None # kostyl
+        elif not user_exists(owned_by_username):
+            return jsonify({'error':'User does not exist'}), 400
 
-        error = add_item(name, amount)
+        error = add_item(name, amount, owned_by_username)
         if error == 0:
             return jsonify({'message':'Item added successfully!'}), 200
         

@@ -126,11 +126,12 @@ def get_username(id):
         return result[0]
 
     
-def add_item(name,amount):
+def add_item(name,amount,owned_by_username):
     try:
         with conn.cursor() as cursor:
-            query = "INSERT INTO inventory (name,amount) VALUES (%s,%s)"
-            cursor.execute(query, (name,amount))
+            query = "INSERT INTO inventory (name,amount, owned_by) VALUES (%s,%s,%s)"
+            user_id = get_id(owned_by_username)
+            cursor.execute(query, (name,amount,user_id))
             conn.commit()
             return 0
     except Exception as e:
