@@ -168,3 +168,17 @@ def item_owned_by(item_id):
             return None
         return result[0]
 
+
+
+#TODO
+def fix_request_pending(request_id):
+    return 1
+
+
+def approve_fix_request(request_id):
+    return 1
+
+
+def deny_fix_request(request_id):
+    return 1
+

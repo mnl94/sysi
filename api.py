@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, session
-from funcs import user_exists, register, get_role, correct_pw, get_owned_items, get_all_items, add_item, change_item, item_exists, item_owned_by
-from validation import valid_username, valid_password, valid_role, valid_item_name, valid_item_amount, valid_item_condition
+from funcs import *
+from validation import *
 
 api_blueprint = Blueprint('api', __name__)
 
@@ -88,7 +88,7 @@ def add_item_api():
         elif not user_exists(owned_by_username):
             return jsonify({'error':'User does not exist'}), 400
 
-        error = add_item(name, amount, owned_by_username)
+        error = add_item(item_name, amount, owned_by_username)
         if error == 0:
             return jsonify({'message':'Item added successfully!'}), 200
         
@@ -158,3 +158,50 @@ def request_fix_api():
     return jsonify({'error':'Unauthorized'}), 401
         
 
+@api_blueprint.route('/getFixRequests', methods=['GET'])
+def get_fix_requests_api():
+    role = session.get('role')
+    if role == 'admin':
+        requests = get_pending_fix_requests()
+        return jsonify(requests), 200
+    return jsonify({'error':'No admin rights'}), 401
+
+
+
+@api_blueprint.route('/approveFixRequest', methods=['POST'])
+def approve_fix_api():
+    role = session.get('role')
+    if role == 'admin':
+        data = request.get_json()
+        if not data:
+            return jsonify({'error':'Invalid json provided'}), 400
+
+        request_id = data.get('request_id')
+        
+        if not valid_id(request_id):
+            return jsonify({'error':'Invalid or missing request_id'})
+        if fix_request_pending(request_id):
+            approve_fix_request(request_id)
+            return jsonify({'message':'Request approved'}), 200
+        return jsonify({'error':'Request does not exist or already approved/denied'}), 400
+    return jsonify({'error':'No admin rights'}), 401
+ 
+
+@api_blueprint.route('/denyFixRequest', methods=['POST'])
+def deny_fix_api():
+    role = session.get('role')
+    if role == 'admin':
+        data = request.get_json()
+        if not data:
+            return jsonify({'error':'Invalid json provided'}), 400
+
+        request_id = data.get('request_id')
+        
+        if not valid_id(request_id):
+            return jsonify({'error':'Invalid or missing request_id'})
+        if fix_request_pending(request_id):
+            deny_fix_request(request_id)
+            return jsonify({'message':'Request denied'}), 200
+        return jsonify({'error':'Request does not exist or already approved/denied'}), 400
+    return jsonify({'error':'No admin rights'}), 401
+ 
