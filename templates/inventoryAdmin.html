@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инвентарь Админа</title>
+    <link rel="stylesheet" href="/static/css/inventoryStyles.css">
+</head>
+<body>
+    <h1>Инвентарь Администратора</h1>
+    <div class="container">
+        <h2>Изменить предмет</h2>
+        <form class="forma" id="changeItemForm">
+            <div class="row-container">
+                <div>
+                    <label for="change_item_id">ID</label>
+                    <input type="number" id="change_item_id" name="item_id" required>
+                </div>
+                <div>
+                    <label for="change_item_name">Название</label>
+                    <input type="text" id="change_item_name" name="item_name" required>
+                </div>
+                <div>
+                    <label for="change_amount">Кол-во</label>
+                    <input type="number" id="change_amount" name="amount" required>
+                </div>
+                <div>
+                    <label for="change_condition">Состояние</label>
+                    <input type="text" id="change_condition" name="condition" required>
+                </div>
+                <div>
+                    <label for="change_owned_by_user">Принадлежность</label>
+                    <input type="text" id="change_owned_by_user" name="owned_by_user" required>
+                </div>
+            </div>
+            <button type="submit">Отправить запрос</button>
+        </form>
+    </div>
+    <div class="container">
+        <h2>Добавить предмет</h2>
+        <form class="forma" id="addItemForm">
+            <div class="row-container">
+                <div>
+                    <label for="add_item_name">Название</label>
+                    <input type="text" id="add_item_name" name="name" required>
+                </div>
+                <div>
+                    <label for="add_amount">Количество</label>
+                    <input type="number" id="add_amount" name="amount" required>
+                </div>
+                <div> 
+                    <label for="add_item_owner">Принадлежность</label>
+                    <input type="text" id="add_item_owner" name="owner" required>
+                </div>
+            </div>
+            <button type="submit">Отправить запрос</button>
+        </form>
+    </div>
+    <div class="container">
+        <h2>Получить все инвентари всех пользователей</h2>
+        <form class="forma">
+            <button type="button" id="getInventoryAdmin">Отправить запрос</button>
+        </form>
+        <div id="inventoryContainer" class="inventory-list">
+        </div>
+    </div>
+
+    <script>
+        async function sendRequest(url, method, data = null) {
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: data ? JSON.stringify(data) : null
+                });
+                const responseText = await response.json();
+                document.getElementById('responseText').textContent = JSON.stringify(responseText, null, 2);
+            } catch (error) {
+                document.getElementById('responseText').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        function renderInventoryItems(items) {
+            const container = document.getElementById('inventoryContainer');
+            container.innerHTML = '';
+
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('inventory-item');
+
+                itemDiv.innerHTML = `
+                    <div>
+                        <label>ID:</label>
+                        <span>${item[0]}</span>
+                    </div>
+                    <div>
+                        <label>Название:</label>
+                        <span>${item[1]}</span>
+                    </div>
+                    <div>
+                        <label>Количество:</label>
+                        <span>${item[2]}</span>
+                    </div>
+                    <div>
+                        <label>Состояние:</label>
+                        <span>${item[3]}</span>
+                    </div>
+                    <div>
+                        <label>Принадлежность:</label>
+                        <span>${item[4]}</span>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+        async function fetchInventoryAdmin() {
+            try {
+                const response = await fetch('/api/getInventoryAdmin');
+                if (!response.ok) {
+                    throw new Error(`Ошибка: ${response.statusText}`);
+                }
+                const data = await response.json();
+                renderInventoryItems(data);
+            } catch (error) {
+                console.error('Ошибка при загрузке данных:', error.message);
+            }
+        }
+        document.getElementById('getInventoryAdmin').addEventListener('click', fetchInventoryAdmin);
+        document.getElementById('changeItemForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = {
+                item_id: parseInt(document.getElementById('change_item_id').value, 10),
+                item_name: document.getElementById('change_item_name').value,
+                amount: parseInt(document.getElementById('change_amount').value, 10),
+                condition: document.getElementById('change_condition').value,
+                owned_by_user: document.getElementById('change_owned_by_user').value
+            };
+            sendRequest('/api/changeItem', 'POST', formData);
+        });
+
+        document.getElementById('addItemForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = {
+                name: document.getElementById('add_item_name').value,
+                amount: parseInt(document.getElementById('add_amount').value, 10),
+                owned_by: document.getElementById('add_item_owner').value
+            };
+            sendRequest('/api/addItem', 'POST', formData);
+        });
+    </script>
+</body>
+</html>
