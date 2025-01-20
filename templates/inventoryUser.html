@@ -2,10 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инвентарь Пользователя</title>
+    <link rel="stylesheet" href="/static/css/inventoryStyles.css">
 </head>
 <body>
-    test
+    <h1>Инвентарь Пользователя</h1>
+    <div class="container">
+        <h2>Получить свой инвентарь</h2>
+        <form class="forma">
+            <button type="button" id="getInventoryUser">Отправить запрос</button>
+        </form>
+        <div id="inventoryContainer" class="inventory-list">
+        </div>
+    </div>
+
+    <script>
+        async function sendRequest(url, method, data = null) {
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: data ? JSON.stringify(data) : null
+                });
+                const responseText = await response.json();
+                document.getElementById('responseText').textContent = JSON.stringify(responseText, null, 2);
+            } catch (error) {
+                document.getElementById('responseText').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        function renderInventoryItems(items) {
+            const container = document.getElementById('inventoryContainer');
+            container.innerHTML = '';
+
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('inventory-item');
+
+                itemDiv.innerHTML = `
+                    <div>
+                        <label>ID:</label>
+                        <span>${item[0]}</span>
+                    </div>
+                    <div>
+                        <label>Название:</label>
+                        <span>${item[1]}</span>
+                    </div>
+                    <div>
+                        <label>Количество:</label>
+                        <span>${item[2]}</span>
+                    </div>
+                    <div>
+                        <label>Состояние:</label>
+                        <span>${item[3]}</span>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+        async function fetchInventoryUser() {
+            try {
+                const response = await fetch('/api/getInventoryUser');
+                if (!response.ok) {
+                    throw new Error(`Ошибка: ${response.statusText}`);
+                }
+                const data = await response.json();
+                renderInventoryItems(data);
+            } catch (error) {
+                console.error('Ошибка при загрузке данных:', error.message);
+            }
+        }
+        document.getElementById('getInventoryUser').addEventListener('click', fetchInventoryUser);
+    </script>
 </body>
 </html>

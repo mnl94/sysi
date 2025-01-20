@@ -25,7 +25,7 @@ def register_html():
 def inventory_html():
     role = session.get('role')
     if role == 'admin':
-        return render_template('inventory.html')
+        return render_template('inventoryAdmin.html')
     return render_template('inventoryUser.html')
 
 if __name__ == '__main__':
