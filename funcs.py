@@ -169,16 +169,30 @@ def item_owned_by(item_id):
         return result[0]
 
 
-
-#TODO
-def fix_request_pending(request_id):
-    return 1
+def is_fix_request_pending(request_id):
+    with conn.cursor() as cursor:
+        query = "SELECT id FROM fix_requests WHERE id = %s"
+        cursor.execute(query, (id,))
+        result = cursor.fetchone()
+        if result is None:
+            return False
+        return True
+    return False
 
 
 def approve_fix_request(request_id):
+    with conn.cursor() as cursor:
+        query = "UPDATE fix_requests SET request_status = %s WHERE id = %s"
+        cursor.execute(query,(request_id,'approved'))
+        conn.commit()
+        return 0
     return 1
 
 
 def deny_fix_request(request_id):
+    with conn.cursor() as cursor:
+        query = "UPDATE fix_requests SET request_status = %s WHERE id = %s"
+        cursor.execute(query,(request_id,'declined'))
+        conn.commit()
+        return 0
     return 1
-
