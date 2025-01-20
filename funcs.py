@@ -169,6 +169,20 @@ def item_owned_by(item_id):
         return result[0]
 
 
+def get_pending_fix_requests():
+    with conn.cursor() as cursor:
+        query = "SELECT id, user_id, item_id, request_status FROM inventory"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        for idx, request in enumerate(result):
+            request_id = request[0]
+            username = get_username(request[1])
+            item_id = request[2]
+            request_status = request[3]
+            result[idx] = [request_id, username, item_id, request_status]
+        return result
+
+
 def is_fix_request_pending(request_id):
     with conn.cursor() as cursor:
         query = "SELECT id FROM fix_requests WHERE id = %s"

@@ -180,7 +180,7 @@ def approve_fix_api():
         
         if not valid_id(request_id):
             return jsonify({'error':'Invalid or missing request_id'})
-        if fix_request_pending(request_id):
+        if is_fix_request_pending(request_id):
             approve_fix_request(request_id)
             return jsonify({'message':'Request approved'}), 200
         return jsonify({'error':'Request does not exist or already approved/denied'}), 400
