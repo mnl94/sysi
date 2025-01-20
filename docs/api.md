@@ -398,7 +398,7 @@
 {
   "error": "Unauthorized"
 }
-
+```
 
 ## /api/approveFixRequest
 
