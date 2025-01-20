@@ -286,7 +286,7 @@
   "item_name": "bats",
   "amount": 42,
   "condition": "used",
-  "owned_by_user": "user1"
+  "owned_by": "user1"
 }
 ```
 
