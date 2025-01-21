@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS inventory_requests (
     -- заявки на получение инвентаря
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    item_name VARCHAR(128) NOT NULL,
+    message VARCHAR(512) DEFAULT NULL,
     request_status ENUM('pending','approved','declined') NOT NULL DEFAULT 'pending', -- отслеживание статуса заявок на получение инвентаря
     FOREIGN KEY (user_id) REFERENCES users(id)
 );

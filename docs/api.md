@@ -273,7 +273,7 @@
 
 ## /api/changeItem
 
-Возвращает закреплённый за пользователем инвентарь
+изменяет предмет инвентаря по id
 
 **Методы**: POST
 
@@ -286,7 +286,7 @@
   "item_name": "bats",
   "amount": 42,
   "condition": "used",
-  "owned_by_user": "user1"
+  "owned_by": "user1"
 }
 ```
 
@@ -398,4 +398,130 @@
 {
   "error": "Unauthorized"
 }
+```
+
+## /api/approveFixRequest
+
+принять запрос на починку инвентаря
+
+**Методы**: POST
+
+**Роль**: admin
+
+**Возвращает**:
+
+- Успех:
+
+   код 200
+
+```json
+{
+  "message":"Request approved"
+}
+```
+
+- запрос уже принят/отклонён или его не cуществует
+
+   код 400
+
+```json
+{
+  "error": "Request does not exist or already approved/denied"
+}
+```
+
+- Не авторизован:
+
+   код 401
+
+```json
+{
+  "error": "No admin rights"
+}
+```
+
+
+## /api/denyFixRequest
+
+отклонить запрос на починку инвентаря
+
+**Методы**: POST
+
+**Роль**: admin
+
+**Возвращает**:
+
+- Успех:
+
+   код 200
+
+```json
+{
+  "message":"Request denied"
+}
+```
+
+- запрос уже принят/отклонён или его не cуществует
+
+   код 400
+
+```json
+{
+  "error": "Request does not exist or already approved/denied"
+}
+```
+
+- Не авторизован:
+
+   код 401
+
+```json
+{
+  "error": "No admin rights"
+}
+```
+
+
+## /api/getFixRequests
+
+возвращает запросы на починку со статусом 'pending'
+
+**Методы**: GET
+
+**Роль**: admin
+
+**Возвращает**:
+
+- Успех:
+
+   код 200
+
+   список списков [ [id1,username1,itemId1,status1], [id2,username2,itemId2,status2] ]
+
+```json
+[
+  [
+    1,
+    "user1",
+    3,
+    "pending"
+  ],
+  [
+    2,
+    "user2",
+    4,
+    "pending"
+  ]
+]
+```
+
+- Не авторизован:
+
+   код 401
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
 

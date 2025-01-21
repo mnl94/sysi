@@ -108,7 +108,7 @@ def change_item_api():
         item_name = data.get('item_name')
         amount = data.get('amount')
         condition = data.get('condition')
-        owned_by_user = data.get('owned_by_user')
+        owned_by_username = data.get('owned_by')
 
         if not valid_item_name(item_name):
             return jsonify({'error':'Invalid or missing item_name'}), 400
@@ -119,8 +119,8 @@ def change_item_api():
         if not valid_item_condition(condition):
             return jsonify({'error':'Invalid or missing condition'}), 400
 
-        if not valid_username(owned_by_user):
-            return jsonify({'error':'Invalid or missing owned_by_user'}), 400
+        if not valid_username(owned_by_username):
+            return jsonify({'error':'Invalid or missing owned_by'}), 400
 
         if owned_by_user == 'null':
             owned_by_user = None #kostyl
@@ -128,7 +128,7 @@ def change_item_api():
             return jsonify({'error':'User does not exist'}), 400
 
         
-        error = change_item(item_id, item_name, amount, condition, owned_by_user)
+        error = change_item(item_id, item_name, amount, condition, owned_by_username)
         if error:
             return jsonify({'error':'Unexpected error'}), 500
         return jsonify({'message':'Item changed successfully'}), 200
@@ -180,7 +180,7 @@ def approve_fix_api():
         
         if not valid_id(request_id):
             return jsonify({'error':'Invalid or missing request_id'})
-        if fix_request_pending(request_id):
+        if is_fix_request_pending(request_id):
             approve_fix_request(request_id)
             return jsonify({'message':'Request approved'}), 200
         return jsonify({'error':'Request does not exist or already approved/denied'}), 400
@@ -199,7 +199,7 @@ def deny_fix_api():
         
         if not valid_id(request_id):
             return jsonify({'error':'Invalid or missing request_id'})
-        if fix_request_pending(request_id):
+        if is_fix_request_pending(request_id):
             deny_fix_request(request_id)
             return jsonify({'message':'Request denied'}), 200
         return jsonify({'error':'Request does not exist or already approved/denied'}), 400
