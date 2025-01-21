@@ -103,7 +103,7 @@
 
         async function fetchRequestsDecision(tipchik) {
             try {
-                const url = tipchik ? '/api/approveFixRequests' : '/api/denyFixRequests';
+                const url = tipchik ? '/api/approveFixRequest' : '/api/denyFixRequest';
                 const response = await fetch(url);
 
                 if (!response.ok) {

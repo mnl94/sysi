@@ -162,7 +162,7 @@ def change_item(item_id, name, amount, condition, owned_by_username):
 def item_owned_by(item_id):
     with conn.cursor() as cursor:
         query = "SELECT owned_by FROM inventory WHERE id = %s"
-        cursor.execute(query, (id,))
+        cursor.execute(query, (item_id,))
         result = cursor.fetchone()
         if result is None:
             return None
@@ -171,7 +171,7 @@ def item_owned_by(item_id):
 
 def get_pending_fix_requests():
     with conn.cursor() as cursor:
-        query = "SELECT id, user_id, item_id, request_status FROM inventory"
+        query = "SELECT id, user_id, item_id, request_status FROM fix_requests"
         cursor.execute(query)
         result = cursor.fetchall()
         for idx, request in enumerate(result):
@@ -210,3 +210,13 @@ def deny_fix_request(request_id):
         conn.commit()
         return 0
     return 1
+
+
+def create_fix_request(item_id, user_id):
+    with conn.cursor() as cursor:
+        query = "INSERT INTO fix_requests (user_id, item_id) VALUES (%s,%s)"
+        cursor.execute(query, (user_id,item_id))
+        conn.commit()
+        return 0
+    return 1
+

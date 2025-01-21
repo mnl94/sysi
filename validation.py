@@ -35,7 +35,7 @@ def valid_id(uid):
     if not isinstance(uid, int):
         return False
 
-    if not (1 <= uid <= 2147483647):
+    if (1 <= uid <= 2147483647):
         return True
     
     return False

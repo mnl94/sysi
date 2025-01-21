@@ -149,10 +149,10 @@ def request_fix_api():
         item_id = data.get('item_id')
         
         if not valid_id(item_id):
-            return jsonify({'error':'Invalid or missing item_id'})
+            return jsonify({'error':'Invalid or missing item_id'}), 400
         if item_exists(item_id):
             if item_owned_by(item_id) == user_id:
-                createFixRequest(item_id, user_id)
+                create_fix_request(item_id, user_id)
                 return jsonify({'message':'Request created'}), 200
         return jsonify({'error':'Item does not exist or you are not the owner'}), 400
     return jsonify({'error':'Unauthorized'}), 401
@@ -179,7 +179,7 @@ def approve_fix_api():
         request_id = data.get('request_id')
         
         if not valid_id(request_id):
-            return jsonify({'error':'Invalid or missing request_id'})
+            return jsonify({'error':'Invalid or missing request_id'}), 400
         if is_fix_request_pending(request_id):
             approve_fix_request(request_id)
             return jsonify({'message':'Request approved'}), 200
