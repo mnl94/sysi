@@ -1,4 +1,5 @@
 BLACKLISTED_CHARACTERS = {'$', '%', '@', '#', '&', '*', '!', '(', ')', '+', '=', '{', '}', '[', ']', '<', '>', ';', ':', ' '}
+BLACKLISTED_CHARACTERS_MESSAGE = {'$', '%', '@', '#', '*', '{', '}', '[', ']', '<', '>', ';'}
 VALID_CONDITIONS = {'new','used','broken'}
 VALID_ROLES = {'user','admin'}
 
@@ -35,10 +36,10 @@ def valid_id(uid):
     if not isinstance(uid, int):
         return False
 
-    if (1 <= uid <= 2147483647):
-        return True
+    if not (1 <= uid <= 2147483647):
+        return False
     
-    return False
+    return True
 
 
 
@@ -70,3 +71,16 @@ def valid_item_condition(condition):
     if condition in VALID_CONDITIONS:
         return True
     return False
+
+
+def valid_message(message):
+    if not isinstance(message, str):
+        return False
+    
+    if not (0 <= len(message) <= 512):
+        return False
+    
+    if any(char in BLACKLISTED_CHARACTERS_MESSAGE for char in message):
+        return False
+    
+    return True

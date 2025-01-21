@@ -27,9 +27,16 @@ def inventory_html():
     if role == 'admin':
         return render_template('inventoryAdmin.html')
     return render_template('inventoryUser.html')
-@app.route('/requests')
-def requests_html():
-    return render_template('requests.html')
+
+@app.route('/fixRequests')
+def fix_requests_html():
+    return render_template('fixRequests.html')
+
+@app.route('/inventoryRequests')
+def inventory_requests_html():
+    return render_template('inventoryRequests.html')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

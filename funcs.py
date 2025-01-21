@@ -38,8 +38,6 @@ conn = mysql.connector.connect(
 
 
 
-
-
 def user_exists(username):
     with conn.cursor() as cursor:
         query = "SELECT id FROM users WHERE username=%s"
@@ -171,7 +169,7 @@ def item_owned_by(item_id):
 
 def get_pending_fix_requests():
     with conn.cursor() as cursor:
-        query = "SELECT id, user_id, item_id, request_status FROM fix_requests"
+        query = "SELECT id, user_id, item_id, request_status FROM fix_requests WHERE request_status = 'pending'"
         cursor.execute(query)
         result = cursor.fetchall()
         for idx, request in enumerate(result):
@@ -220,3 +218,54 @@ def create_fix_request(item_id, user_id):
         return 0
     return 1
 
+
+def get_pending_inventory_requests():
+    with conn.cursor() as cursor:
+        query = "SELECT id, user_id, message, request_status FROM inventory_requests WHERE request_status = 'pending'"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        for idx, request in enumerate(result):
+            request_id = request[0]
+            username = get_username(request[1])
+            message = request[2]
+            request_status = request[3]
+            result[idx] = [request_id, username, message, request_status]
+        return result
+
+
+def is_inventory_request_pending(request_id):
+    with conn.cursor() as cursor:
+        query = "SELECT id FROM inventory_requests WHERE id = %s"
+        cursor.execute(query, (id,))
+        result = cursor.fetchone()
+        if result is None:
+            return False
+        return True
+    return False
+
+
+def approve_inventory_request(request_id):
+    with conn.cursor() as cursor:
+        query = "UPDATE inventory_requests SET request_status = %s WHERE id = %s"
+        cursor.execute(query,(request_id,'approved'))
+        conn.commit()
+        return 0
+    return 1
+
+
+def deny_inventory_request(request_id):
+    with conn.cursor() as cursor:
+        query = "UPDATE inventory_requests SET request_status = %s WHERE id = %s"
+        cursor.execute(query,(request_id,'declined'))
+        conn.commit()
+        return 0
+    return 1
+
+
+def create_inventory_request(user_id, message):
+    with conn.cursor() as cursor:
+        query = "INSERT INTO inventory_requests (user_id, message) VALUES (%s,%s)"
+        cursor.execute(query, (user_id,message))
+        conn.commit()
+        return 0
+    return 1

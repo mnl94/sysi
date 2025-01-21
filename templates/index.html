@@ -14,7 +14,8 @@
             </div>
             <nav>
                 {% if session.get('username') %}
-                    <a href="/requests" class="references">Запросы</a>
+                    <a href="/fixRequests" class="references">Запросы на починку</a>
+                    <a href="/inventoryRequests" class="references">Запросы на назначение</a>
                     <a href="/inventory" class="references">Инвентарь</a>
                     <form id="logout-form" style="display:inline;">
                         <button type="button" id="logout-button" class="references">Выйти</button>

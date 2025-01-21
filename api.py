@@ -205,3 +205,70 @@ def deny_fix_api():
         return jsonify({'error':'Request does not exist or already approved/denied'}), 400
     return jsonify({'error':'No admin rights'}), 401
  
+
+@api_blueprint.route('/requestInventory', methods=['POST'])
+def request_inventory_api():
+    role = session.get('role')
+    username = session.get('username')
+    if role == 'admin' or role == 'user':
+        data = request.get_json()
+        user_id = get_id(username)
+        if not data:
+            return jsonify({'error':'Invalid json provided'}), 400
+
+        message = data.get('message')
+        
+        if not valid_message(message):
+            return jsonify({'error':'Invalid or missing message'}), 400
+        
+        create_inventory_request(user_id, message)
+        return jsonify({'message':'Request created'}), 200
+    return jsonify({'error':'Unauthorized'}), 401
+        
+
+@api_blueprint.route('/getInventoryRequests', methods=['GET'])
+def get_inventory_requests_api():
+    role = session.get('role')
+    if role == 'admin':
+        requests = get_pending_inventory_requests()
+        return jsonify(requests), 200
+    return jsonify({'error':'No admin rights'}), 401
+
+
+
+@api_blueprint.route('/approveInventoryRequest', methods=['POST'])
+def approve_inventory_api():
+    role = session.get('role')
+    if role == 'admin':
+        data = request.get_json()
+        if not data:
+            return jsonify({'error':'Invalid json provided'}), 400
+
+        request_id = data.get('request_id')
+        
+        if not valid_id(request_id):
+            return jsonify({'error':'Invalid or missing request_id'}), 400
+        if is_inventory_request_pending(request_id):
+            approve_inventory_request(request_id)
+            return jsonify({'message':'Request approved'}), 200
+        return jsonify({'error':'Request does not exist or already approved/denied'}), 400
+    return jsonify({'error':'No admin rights'}), 401
+ 
+
+@api_blueprint.route('/denyInventoryRequest', methods=['POST'])
+def deny_inventory_api():
+    role = session.get('role')
+    if role == 'admin':
+        data = request.get_json()
+        if not data:
+            return jsonify({'error':'Invalid json provided'}), 400
+
+        request_id = data.get('request_id')
+        
+        if not valid_id(request_id):
+            return jsonify({'error':'Invalid or missing request_id'})
+        if is_inventory_request_pending(request_id):
+            deny_inventory_request(request_id)
+            return jsonify({'message':'Request denied'}), 200
+        return jsonify({'error':'Request does not exist or already approved/denied'}), 400
+    return jsonify({'error':'No admin rights'}), 401
