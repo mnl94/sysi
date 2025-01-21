@@ -92,23 +92,23 @@
 
                 itemDiv.innerHTML = `
                     <div>
-                        <label>ID:</label>
+                        <label>ID</label>
                         <span>${item[0]}</span>
                     </div>
                     <div>
-                        <label>Название:</label>
+                        <label>Название</label>
                         <span>${item[1]}</span>
                     </div>
                     <div>
-                        <label>Количество:</label>
+                        <label>Количество</label>
                         <span>${item[2]}</span>
                     </div>
                     <div>
-                        <label>Состояние:</label>
+                        <label>Состояние</label>
                         <span>${item[3]}</span>
                     </div>
                     <div>
-                        <label>Принадлежность:</label>
+                        <label>Принадлежность</label>
                         <span>${item[4]}</span>
                     </div>
                 `;
@@ -143,7 +143,7 @@
         document.getElementById('addItemForm').addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = {
-                name: document.getElementById('add_item_name').value,
+                item_name: document.getElementById('add_item_name').value,
                 amount: parseInt(document.getElementById('add_amount').value, 10),
                 owned_by: document.getElementById('add_item_owner').value
             };

@@ -57,7 +57,7 @@ h1 {
     box-sizing: border-box;
 
 }
-.forma button {
+.forma button, .btn-container button {
     padding: 10px 20px;
     font-size: 15px;
     color: #f7fce6;
@@ -68,13 +68,13 @@ h1 {
     margin-top: 20px;
 }
 
-.forma button:hover {
+.forma button:hover, .btn-container button {
     background-color: #2f4b4c;
     transform:scale(1.01);
     transition:ease-in .5s;
 }
 
-.inventory-list {
+.inventory-list, .requests-list {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -82,7 +82,7 @@ h1 {
     margin-top: 10px;
 }
 
-.inventory-item {
+.inventory-item, .requests-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -92,12 +92,23 @@ h1 {
     border-radius: 5px;
 }
 
-.inventory-item div {
+.inventory-item div, .requests-item div {
     display: flex;
     flex-direction: column;
     margin-right: 20px;
 }
 
-.inventory-item label {
+.inventory-item label, .requests-item label {
     font-weight: bold;
+}
+
+.btn-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 15px;
+    width: 100%;
+}
+.hidden {
+    display: none;
 }

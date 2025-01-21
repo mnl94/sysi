@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запросы на починку</title>
+    <link rel="stylesheet" href="/static/css/inventoryStyles.css">
+</head>
+<body>
+    <h1>Запросы на починку</h1>
+    {% if session.get('role') == 'admin' %}
+    <div class="container">
+        <h2>Получить все запросы</h2>
+        <form class="forma">
+            <button type="button" id="getRequestsAdmin">Отправить запрос</button>
+        </form>
+        <div id="requestsContainer" class="requests-list"></div>
+        <div id="decisionButtons" class="btn-container hidden">
+            <button type="button" id="denyButton">Отклонить</button>
+            <button type="button" id="approveButton">Принять</button>
+        </div>
+    </div>
+    {% endif %}
+    <script>
+        async function sendRequest(url, method, data = null) {
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: data ? JSON.stringify(data) : null
+                });
+                const responseText = await response.json();
+                document.getElementById('responseText').textContent = JSON.stringify(responseText, null, 2);
+            } catch (error) {
+                document.getElementById('responseText').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        function renderRequests(items) {
+            const container = document.getElementById('requestsContainer');
+            container.innerHTML = '';
+
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('requests-item');
+
+                itemDiv.innerHTML = `
+                    <div>
+                        <label>ID</label>
+                        <span>${item[0]}</span>
+                    </div>
+                    <div>
+                        <label>Пользователь</label>
+                        <span>${item[1]}</span>
+                    </div>
+                    <div>
+                        <label>ID предмета</label>
+                        <span>${item[2]}</span>
+                    </div>
+                    <div>
+                        <label>Статус</label>
+                        <span>${item[3]}</span>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+
+        async function fetchRequestsAdmin() {
+            try {
+                const response = await fetch('/api/getFixRequests');
+                if (!response.ok) {
+                    throw new Error(`Ошибка: ${response.statusText}`);
+                }
+                const data = await response.json();
+                renderRequests(data);
+                document.getElementById('decisionButtons').classList.remove('hidden');
+            } catch (error) {
+                console.error('Ошибка при загрузке данных:', error.message);
+            }
+        }
+
+        async function fetchRequestsDecision(tipchik) {
+            try {
+                const url = tipchik ? '/api/approveFixRequests' : '/api/denyFixRequests';
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Ошибка: ${response.statusText}`);
+                }
+                console.log(tipchik ? 'Запросы одобрены.' : 'Запросы отклонены.');
+            } catch (error) {
+                console.error('Ошибка при обработке решения:', error.message);
+            }
+        }
+
+        document.getElementById('getRequestsAdmin').addEventListener('click', fetchRequestsAdmin);
+        document.getElementById('denyButton').addEventListener('click', () => fetchRequestsDecision(false));
+        document.getElementById('approveButton').addEventListener('click', () => fetchRequestsDecision(true));
+    </script>
+</body>
+</html>

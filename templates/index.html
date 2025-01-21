@@ -14,11 +14,8 @@
             </div>
             <nav>
                 {% if session.get('username') %}
-                    {% if session.get('role') == 'admin' %}
+                    <a href="/requests" class="references">Запросы</a>
                     <a href="/inventory" class="references">Инвентарь</a>
-                    {% else %}
-                    <a href="/inventory" class="references">Инвентарь</a>
-                    {% endif %}
                     <form id="logout-form" style="display:inline;">
                         <button type="button" id="logout-button" class="references">Выйти</button>
                     </form>
@@ -38,7 +35,7 @@
             <p class="left">Привет!</p>
             <p class="center"><strong>Твой Логин: {{ session['username'] }}</strong></p>
             <p class="right">
-                {% if session['role'] == 'admin' %}
+                {% if session.get('role') == 'admin' %}
                     Твоя Роль: Администратор
                 {% else %}
                     Твоя Роль: Пользователь

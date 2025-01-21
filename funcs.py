@@ -42,8 +42,16 @@ conn = mysql.connector.connect(
 
 def user_exists(username):
     with conn.cursor() as cursor:
-        query = "SELECT username FROM users WHERE username=%s"
+        query = "SELECT id FROM users WHERE username=%s"
         cursor.execute(query, (username,))
+        result = cursor.fetchone()
+        return True if result else False
+
+
+def item_exists(item_id):
+    with conn.cursor() as cursor:
+        query = "SELECT id FROM inventory WHERE id=%s"
+        cursor.execute(query, (item_id,))
         result = cursor.fetchone()
         return True if result else False
 
@@ -126,11 +134,12 @@ def get_username(id):
         return result[0]
 
     
-def add_item(name,amount):
+def add_item(name,amount,owned_by_username):
     try:
         with conn.cursor() as cursor:
-            query = "INSERT INTO inventory (name,amount) VALUES (%s,%s)"
-            cursor.execute(query, (name,amount))
+            query = "INSERT INTO inventory (name,amount, owned_by) VALUES (%s,%s,%s)"
+            user_id = get_id(owned_by_username)
+            cursor.execute(query, (name,amount,user_id))
             conn.commit()
             return 0
     except Exception as e:
@@ -148,3 +157,28 @@ def change_item(item_id, name, amount, condition, owned_by_username):
     except Exception as e:
         print(e)
         return 1
+
+
+def item_owned_by(item_id):
+    with conn.cursor() as cursor:
+        query = "SELECT owned_by FROM inventory WHERE id = %s"
+        cursor.execute(query, (id,))
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        return result[0]
+
+
+
+#TODO
+def fix_request_pending(request_id):
+    return 1
+
+
+def approve_fix_request(request_id):
+    return 1
+
+
+def deny_fix_request(request_id):
+    return 1
+
