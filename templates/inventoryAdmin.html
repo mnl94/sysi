@@ -64,7 +64,7 @@
         <div id="inventoryContainer" class="inventory-list">
         </div>
     </div>
-
+    <div id="responseText" style="display: none"></div> <!-- Костыль -->
     <script>
         async function sendRequest(url, method, data = null) {
             try {
@@ -135,7 +135,7 @@
                 item_name: document.getElementById('change_item_name').value,
                 amount: parseInt(document.getElementById('change_amount').value, 10),
                 condition: document.getElementById('change_condition').value,
-                owned_by_user: document.getElementById('change_owned_by_user').value
+                owned_by: document.getElementById('change_owned_by_user').value
             };
             sendRequest('/api/changeItem', 'POST', formData);
         });

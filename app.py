@@ -29,10 +29,7 @@ def inventory_html():
     return render_template('inventoryUser.html')
 @app.route('/requests')
 def requests_html():
-    role = session.get('role')
-    if role == 'admin':
-        return render_template('requestsAdmin.html')
-    return render_template('requestsUser.html')
+    return render_template('requests.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
