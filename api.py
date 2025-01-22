@@ -267,8 +267,66 @@ def deny_inventory_api():
         
         if not valid_id(request_id):
             return jsonify({'error':'Invalid or missing request_id'})
+            
         if is_inventory_request_pending(request_id):
             deny_inventory_request(request_id)
             return jsonify({'message':'Request denied'}), 200
         return jsonify({'error':'Request does not exist or already approved/denied'}), 400
+    return jsonify({'error':'No admin rights'}), 401
+
+
+@api_blueprint.route('/createOrder', methods=['POST'])
+def create_order_api():
+    role = session.get('role')
+    if role == 'admin':
+        data = request.get_json()
+        if not data:
+            return jsonify({'error':'Invalid json provided'}), 400
+        
+        item_name = data.get('item_name')
+        amount = data.get('amount')
+        price = data.get('price')
+        supplier = data.get('supplier')
+
+        if not valid_item_name(item_name):
+            return jsonify({'error':'Invalid or missing item_name'}), 400
+        if not valid_item_amount(amount):
+            return jsonify({'error':'Invalid or missing amount'}), 400
+        if not valid_item_price(price):
+            return jsonify({'error':'Invalid or missing price'}), 400
+        if not valid_supplier(supplier):
+            return jsonify({'error':'Invalid or missing supplier'}), 400
+        
+        add_order(item_name, amount, price, supplier)
+        return jsonify({'message':'Order created'}), 200
+    return jsonify({'error':'No admin rights'}), 401
+
+
+@api_blueprint.route('/changeOrder', methods=['POST'])
+def change_order_api():
+    role = session.get('role')
+    if role == 'admin':
+        data = request.get_json()
+        if not data:
+            return jsonify({'error':'Invalid json provided'}), 400
+        
+        order_id = data.get('id')
+        item_name = data.get('item_name')
+        amount = data.get('amount')
+        price = data.get('price')
+        supplier = data.get('supplier')
+
+        if not valid_id(order_id):
+            return jsonify({'error':'Invalid or missing id'}), 400
+        if not valid_item_name(item_name):
+            return jsonify({'error':'Invalid or missing item_name'}), 400
+        if not valid_item_amount(amount):
+            return jsonify({'error':'Invalid or missing amount'}), 400
+        if not valid_item_price(price):
+            return jsonify({'error':'Invalid or missing price'}), 400
+        if not valid_supplier(supplier):
+            return jsonify({'error':'Invalid or missing supplier'}), 400
+        
+        change_order(order_id, item_name, amount, price, supplier)
+        return jsonify({'message':'Order changed'}), 200
     return jsonify({'error':'No admin rights'}), 401

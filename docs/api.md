@@ -163,14 +163,14 @@
 [
   [
     1,
-    "boots",
+    "item1",
     3,
     "new",
     "user1"
   ],
   [
     2,
-    "balls",
+    "item2",
     3,
     "used",
     "user2"
@@ -541,3 +541,105 @@
 }
 ```
 
+
+## /api/createOrder
+
+добавляет закупку в план
+
+**Методы**: POST
+
+**Роль**: admin
+
+**Принимает:**  
+
+```json
+{
+  "item_name": "item1",
+  "amount": 1,
+  "price": 1,
+  "supplier": "supplier1"
+}
+```
+
+**Возвращает**:
+
+- Успех:
+
+   код 200
+
+```json
+{
+  "message":"Order created"
+}
+```
+
+- Ошибки валидации
+
+   код 400
+
+```json
+{
+  "error": "Invalid or missing <field_name>"
+}
+```
+
+- Не авторизован:
+
+   код 401
+
+```json
+{
+  "error": "No admin rights"
+}
+```
+
+
+## /api/changeOrder
+
+изменяет план закупок по id
+
+**Методы**: POST
+
+**Роль**: admin
+
+**Принимает**:
+```json
+{
+  "item_id": 1,
+  "item_name": "item1",
+  "amount": 42,
+  "supplier": "supplier1"
+}
+```
+
+**Возвращает**:
+
+- Успех:
+
+   код 200
+
+```json
+{
+  "message":"Order changed"
+}
+```
+
+- Ошибки валидации
+
+   код 400
+
+```json
+{
+  "error": "Invalid or missing <field_name>"
+}
+```
+
+- Не авторизован:
+
+   код 401
+
+```json
+{
+  "error": "No admin rights"
+}
+```
