@@ -336,7 +336,7 @@ def change_order_api():
 @api_blueprint.route('/generateReport', methods=['GET'])
 def generate_report_api():
     role = session.get('role')
-    if role == 'admin'
+    if role == 'admin':
         data = get_all_items()
         output = create_excel(data)
         current_date = datetime.now().strftime("%Y-%m-%d")
