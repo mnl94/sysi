@@ -1,4 +1,5 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify, session, Response
+from datetime import datetime
 from funcs import *
 from validation import *
 
@@ -330,3 +331,20 @@ def change_order_api():
         change_order(order_id, item_name, amount, price, supplier)
         return jsonify({'message':'Order changed'}), 200
     return jsonify({'error':'No admin rights'}), 401
+
+
+@api_blueprint.route('/generateReport', methods=['GET'])
+def generate_report_api():
+    role = session.get('role')
+    if role == 'admin'
+        data = get_all_items()
+        output = create_excel(data)
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        filename = f"report-{current_date}.xlsx"
+        response = Response(
+            output,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+        return response
+    return jsonify({'error':'No admin rughts'}), 401

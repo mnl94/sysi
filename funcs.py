@@ -2,6 +2,8 @@ import os
 import bcrypt
 from dotenv import load_dotenv
 import mysql.connector
+from openpyxl import Workbook
+from io import BytesIO
 
 load_dotenv()
 
@@ -235,7 +237,7 @@ def get_pending_inventory_requests():
 
 def is_inventory_request_pending(request_id):
     with conn.cursor() as cursor:
-        query = "SELECT id FROM inventory_requests WHERE id = %s"
+        query = "SELECT id FROM inventory_requests WHERE id = %s AND request_status = 'pending'"
         cursor.execute(query, (id,))
         result = cursor.fetchone()
         if result is None:
@@ -280,10 +282,27 @@ def create_order(item_name, amount, price, supplier):
     return 1
 
 
- def change_order(order_id, item_name, amount, price, supplier):
+def change_order(order_id, item_name, amount, price, supplier):
     with conn.cursor() as cursor:
         query = "UPDATE orders SET item_name = %s, amount = %s, price = %s, supplier = %s WHERE id = %s"
         cursor.execute(query, (item_name, amount, price, supplier, order_id))
         conn.commit()
         return 0
     return 1
+
+
+def create_excel(data):
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "report"
+    headers = ['id','item name','amount','condition','owner']
+    sheet.append(headers)
+
+    for row in data:
+        print(row)
+        sheet.append(row)
+
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+    return output
