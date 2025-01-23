@@ -109,7 +109,7 @@ def change_item_api():
         item_name = data.get('item_name')
         amount = data.get('amount')
         condition = data.get('condition')
-        owned_by_username = data.get('owned_by')
+        owned_by_user = data.get('owned_by')
 
         if not valid_item_name(item_name):
             return jsonify({'error':'Invalid or missing item_name'}), 400
@@ -120,16 +120,17 @@ def change_item_api():
         if not valid_item_condition(condition):
             return jsonify({'error':'Invalid or missing condition'}), 400
 
-        if not valid_username(owned_by_username):
-            return jsonify({'error':'Invalid or missing owned_by'}), 400
-
-        if owned_by_user == 'null':
+        if owned_by_user == 'null' or owned_by_user == '':
             owned_by_user = None #kostyl
+
+        elif not valid_username(owned_by_user):
+            return jsonify({'error':'Invalid or missing owned_by'}), 400
+        
         elif not user_exists(owned_by_user):
             return jsonify({'error':'User does not exist'}), 400
 
         
-        error = change_item(item_id, item_name, amount, condition, owned_by_username)
+        error = change_item(item_id, item_name, amount, condition, owned_by_user)
         if error:
             return jsonify({'error':'Unexpected error'}), 500
         return jsonify({'message':'Item changed successfully'}), 200
@@ -347,4 +348,4 @@ def generate_report_api():
         )
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
-    return jsonify({'error':'No admin rughts'}), 401
+    return jsonify({'error':'No admin rights'}), 401

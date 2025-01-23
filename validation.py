@@ -1,5 +1,9 @@
 BLACKLISTED_CHARACTERS = {'$', '%', '@', '#', '&', '*', '!', '(', ')', '+', '=', '{', '}', '[', ']', '<', '>', ';', ':', ' '}
 BLACKLISTED_CHARACTERS_MESSAGE = {'$', '%', '@', '#', '*', '{', '}', '[', ']', '<', '>', ';'}
+MIN_PASSW_LEN = 4
+MAX_PASSW_LEN = 60
+MIN_USERNAME_LEN = 1
+MAX_USERNAME_LEN = 255
 VALID_CONDITIONS = {'new','used','broken'}
 VALID_ROLES = {'user','admin'}
 MAX_INT_MYSQL = 2147483647
@@ -7,8 +11,9 @@ MAX_INT_MYSQL = 2147483647
 def valid_username(username):
     if not isinstance(username, str):
         return False
-        
-    if len(username) > 255:
+    
+    leng = len(username)
+    if leng > MAX_USERNAME_LEN or leng < MIN_USERNAME_LEN:
         return False
         
     if any(char in BLACKLISTED_CHARACTERS for char in username):
@@ -20,8 +25,9 @@ def valid_username(username):
 def valid_password(password):
     if not isinstance(password, str):
         return False
-        
-    if len(password) < 4:
+    
+    leng = len(password)
+    if leng < MIN_PASSW_LEN or leng > MAX_PASSW_LEN:
         return False
     
     return True
