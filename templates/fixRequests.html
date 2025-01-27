@@ -15,10 +15,6 @@
             <button type="button" id="getRequestsAdmin">Отправить запрос</button>
         </form>
         <div id="requestsContainer" class="requests-list"></div>
-        <div id="decisionButtons" class="btn-container hidden">
-            <button type="button" id="denyButton">Отклонить</button>
-            <button type="button" id="approveButton">Принять</button>
-        </div>
     </div>
     {% endif %}
     <div class="container">
@@ -27,12 +23,13 @@
             <div class="row-container">
                 <div>
                     <label for="request_id">ID предмета</label>
-                    <input type="text" id="request_id" name="name" required>
+                    <input type="text" id="request_id" name="item_id" required>
                 </div>
             </div>
             <button type="submit">Отправить запрос</button>
         </form>
     </div> 
+    <div class="backToMain">На главную</div>
     <div id="responseText" style="display: none"></div> <!-- Костыль -->
     <script>
         async function sendRequest(url, method, data = null) {
@@ -59,11 +56,13 @@
         function renderRequests(items) {
             const container = document.getElementById('requestsContainer');
             container.innerHTML = '';
-
+            const perevodchik = {
+                'pending': 'Ожидание',
+            };
             items.forEach(item => {
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('requests-item');
-
+                const status = perevodchik[item[3]] || item[3];
                 itemDiv.innerHTML = `
                     <div>
                         <label>ID</label>
@@ -79,10 +78,28 @@
                     </div>
                     <div>
                         <label>Статус</label>
-                        <span>${item[3]}</span>
+                        <span>${status}</span>
                     </div>
+                    <div>
+                        <button class="approve-btn" data-id="${item[0]}" type="button">Принять</button>
+                        <button class="deny-btn" data-id="${item[0]}" type="button">Отклонить</button>
+                    </div>
+                    <div id="response-request-${item[0]}"></div>
+
                 `;
                 container.appendChild(itemDiv);
+            });
+            document.querySelectorAll('.approve-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const requestId = button.getAttribute('data-id');
+                    fetchRequestsDecision(true, requestId);
+                });
+            });
+            document.querySelectorAll('.deny-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const requestId = button.getAttribute('data-id');
+                    fetchRequestsDecision(false, requestId);
+                });
             });
         }
 
@@ -94,37 +111,35 @@
                 }
 
                 const data = await response.json();
-                document.getElementById('decisionButtons').classList.remove('hidden');
                 renderRequests(data);
             } catch (error) {
                 document.getElementById('responseText').textContent = `Ошибка: ${error.message}`;
             }
         }
 
-        async function fetchRequestsDecision(tipchik) {
+        async function fetchRequestsDecision(isApproved, requestId) {
             try {
-                const url = tipchik ? '/api/approveFixRequest' : '/api/denyFixRequest';
-                const response = await fetch(url);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                const url = isApproved ? '/api/approveFixRequest' : '/api/denyFixRequest';
+                const formData = {
+                    request_id: parseInt(requestId, 10)
                 }
-
-                document.getElementById('responseText').textContent = tipchik ? 'Запросы успешно одобрены.' : 'Запросы успешно отклонены.';
+                sendRequest(url, 'POST', formData);
+                document.getElementById(`response-request-${requestId}`).textContent = isApproved ? 'Одобрено' : 'Отклонено';
             } catch (error) {
-                document.getElementById('responseText').textContent = `Ошибка: ${error.message}`;
+                document.getElementById(`response-request-${requestId}`).textContent = `Ошибка: ${error.message}`;
             }
         }
-
+        //Проблема в функции выше, оно ретурнит internal server error, ты мб увидишь почему
         document.getElementById('getRequestsAdmin').addEventListener('click', fetchRequestsAdmin);
-        document.getElementById('denyButton').addEventListener('click', () => fetchRequestsDecision(false));
-        document.getElementById('approveButton').addEventListener('click', () => fetchRequestsDecision(true));
         document.getElementById('requestForm').addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = {
                 item_id: parseInt(document.getElementById('request_id').value, 10),
             };
             sendRequest('/api/requestFix', 'POST', formData);
+        });
+        document.querySelector('.backToMain').addEventListener('click', () => {
+            window.location.href = '/';
         });
     </script>
 </body>

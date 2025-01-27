@@ -127,3 +127,12 @@ h1 {
     color: red;
     margin-top: 10px;
 }
+.approve-btn, .deny-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+    color: #f7fce6;
+    background-color: #182c2b;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
