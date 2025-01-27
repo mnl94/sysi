@@ -10,15 +10,18 @@
     <h1>Инвентарь Пользователя</h1>
     <div class="container">
         <h2>Получить свой инвентарь</h2>
-        <form class="forma">
-            <button type="button" id="getInventoryUser">Отправить запрос</button>
-        </form>
         <div id="inventoryContainer" class="inventory-list">
+            
         </div>
+        <div id="inventoryItemsError" class="error-message"></div>
     </div>
-
+    <div class="backToMain">
+        На главную
+    </div>
     <script>
         async function sendRequest(url, method, data = null) {
+            const errorContainer = document.getElementById('inventoryItemsError');
+            if (errorContainer) errorContainer.textContent = '';
             try {
                 const response = await fetch(url, {
                     method: method,
@@ -27,10 +30,15 @@
                     },
                     body: data ? JSON.stringify(data) : null
                 });
-                const responseText = await response.json();
-                document.getElementById('responseText').textContent = JSON.stringify(responseText, null, 2);
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    if (errorContainer) errorContainer.textContent = `Ошибка: ${errorMessage}`;
+                    return null;
+                }
+                return await response.json();
             } catch (error) {
-                document.getElementById('responseText').textContent = `Error: ${error.message}`;
+                if (errorContainer) errorContainer.textContent = `Ошибка: ${error.message}`;
+                return null;
             }
         }
 
@@ -72,10 +80,15 @@
                 const data = await response.json();
                 renderInventoryItems(data);
             } catch (error) {
-                console.error('Ошибка при загрузке данных:', error.message);
+                const errorMessage = document.getElementById('inventoryItemsError');
+                if (errorMessage) errorMessage.textContent = `Ошибка: ${error.message}`;
+                return null;
             }
         }
-        document.getElementById('getInventoryUser').addEventListener('click', fetchInventoryUser);
+        window.addEventListener('load', fetchInventoryUser);
+        document.querySelector('.backToMain').addEventListener('click', () => {
+            window.location.href = '/';
+        });
     </script>
 </body>
 </html>

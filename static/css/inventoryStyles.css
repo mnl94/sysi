@@ -48,7 +48,7 @@ h1 {
     text-align: left;
     color: #182c2b;
 }
-.forma input {
+.forma input, select {
     padding: 8px;
     font-size: 15px;
     border: 1px solid #182c2b;
@@ -111,4 +111,19 @@ h1 {
 }
 .hidden {
     display: none;
+}
+.backToMain {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #182c2b;
+    color: #f7fce6;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.error-message {
+    color: red;
+    margin-top: 10px;
 }

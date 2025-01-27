@@ -26,14 +26,19 @@
                 </div>
                 <div>
                     <label for="change_condition">Состояние</label>
-                    <input type="text" id="change_condition" name="condition" required>
+                    <select id="change_condition" name="condition">
+                        <option value="new">Новый</option>
+                        <option value="used">Старый</option>
+                        <option value="broken">Сломавшийся</option>
+                    </select>
                 </div>
                 <div>
                     <label for="change_owned_by_user">Принадлежность</label>
-                    <input type="text" id="change_owned_by_user" name="owned_by_user" required>
+                    <input type="text" id="change_owned_by_user" name="owned_by_user" />
                 </div>
             </div>
             <button type="submit">Отправить запрос</button>
+            <div id="changeItemError" class="error-message"></div>
         </form>
     </div>
     <div class="container">
@@ -50,23 +55,25 @@
                 </div>
                 <div> 
                     <label for="add_item_owner">Принадлежность</label>
-                    <input type="text" id="add_item_owner" name="owner" required>
+                    <input type="text" id="add_item_owner" name="owner" />
                 </div>
             </div>
             <button type="submit">Отправить запрос</button>
+            <div id="changeItemError" class="error-message"></div>
         </form>
     </div>
     <div class="container">
         <h2>Получить все инвентари всех пользователей</h2>
-        <form class="forma">
-            <button type="button" id="getInventoryAdmin">Отправить запрос</button>
-        </form>
         <div id="inventoryContainer" class="inventory-list">
         </div>
+        <div id="inventoryItemsError" class="error-message"></div>
     </div>
+    <div class="backToMain">На главную</div>
     <div id="responseText" style="display: none"></div> <!-- Костыль -->
     <script>
-        async function sendRequest(url, method, data = null) {
+        async function sendRequest(url, method, data = null, errorContainerId = null) {
+            const errorContainer = errorContainerId ? document.getElementById(errorContainerId) : null;
+            if (errorContainer) errorContainer.textContent = '';
             try {
                 const response = await fetch(url, {
                     method: method,
@@ -75,21 +82,31 @@
                     },
                     body: data ? JSON.stringify(data) : null
                 });
-                const responseText = await response.json();
-                document.getElementById('responseText').textContent = JSON.stringify(responseText, null, 2);
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    if (errorContainer) errorContainer.textContent = `Ошибка: ${errorMessage}`;
+                    return null;
+                }
+                return await response.json();
             } catch (error) {
-                document.getElementById('responseText').textContent = `Error: ${error.message}`;
+                if (errorContainer) errorContainer.textContent = `Ошибка: ${error.message}`;
+                return null;
             }
         }
 
         function renderInventoryItems(items) {
             const container = document.getElementById('inventoryContainer');
             container.innerHTML = '';
+            const perevodchik = {
+                'new': 'Новый',
+                'used': 'Старый',
+                'broken': 'Сломавшийся'
+            }
 
             items.forEach(item => {
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('inventory-item');
-
+                const translatedCondition = perevodchik[item[3]] || item[3]; //Добавил если вдруг не будет такого кондишна
                 itemDiv.innerHTML = `
                     <div>
                         <label>ID</label>
@@ -105,7 +122,7 @@
                     </div>
                     <div>
                         <label>Состояние</label>
-                        <span>${item[3]}</span>
+                        <span>${translatedCondition}</span>
                     </div>
                     <div>
                         <label>Принадлежность</label>
@@ -124,30 +141,53 @@
                 const data = await response.json();
                 renderInventoryItems(data);
             } catch (error) {
-                console.error('Ошибка при загрузке данных:', error.message);
+                const errorMessage = document.getElementById('inventoryItemsError');
+                if (errorMessage) errorMessage.textContent = `Ошибка: ${error.message}`;
+                return null;
             }
         }
-        document.getElementById('getInventoryAdmin').addEventListener('click', fetchInventoryAdmin);
+        window.addEventListener('load', fetchInventoryAdmin);
         document.getElementById('changeItemForm').addEventListener('submit', (event) => {
             event.preventDefault();
+            let ownedBy = document.getElementById('change_owned_by_user').value;
+            if (ownedBy.trim() === '') {
+                ownedBy = 'Не привязано';
+            }
             const formData = {
                 item_id: parseInt(document.getElementById('change_item_id').value, 10),
                 item_name: document.getElementById('change_item_name').value,
                 amount: parseInt(document.getElementById('change_amount').value, 10),
                 condition: document.getElementById('change_condition').value,
-                owned_by: document.getElementById('change_owned_by_user').value
+                owned_by: ownedBy
             };
-            sendRequest('/api/changeItem', 'POST', formData);
+            try {
+                sendRequest('/api/changeItem', 'POST', formData);
+                location.reload();
+            } catch (error) {
+                document.getElementById('changeItemError').innerText = `Ошибка: ${error.message || error}`;
+            }
         });
 
         document.getElementById('addItemForm').addEventListener('submit', (event) => {
             event.preventDefault();
+            let ownedBy = document.getElementById('add_item_owner').value;
+            if (ownedBy.trim() === '') {
+                ownedBy = 'Не привязано';
+            }
             const formData = {
                 item_name: document.getElementById('add_item_name').value,
                 amount: parseInt(document.getElementById('add_amount').value, 10),
-                owned_by: document.getElementById('add_item_owner').value
+                owned_by: ownedBy
             };
-            sendRequest('/api/addItem', 'POST', formData);
+            try {
+                sendRequest('/api/addItem', 'POST', formData);
+                location.reload();
+            } catch (error) {
+                document.getElementById('addItemError').innerText = `Ошибка: ${error.message || error}`;
+            }
+        });
+        document.querySelector('.backToMain').addEventListener('click', () => {
+            window.location.href = '/';
         });
     </script>
 </body>

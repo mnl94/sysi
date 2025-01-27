@@ -37,16 +37,17 @@
             });
 
             const data = await response.json();
-            const messageElement = document.getElementById('register-message');
+            const registerMessage = document.getElementById('register-message');
             if (response.status === 201) {
-                messageElement.textContent = "Регистрация успешна!";
-                messageElement.style.color = '#21a645';
+                registerMessage.textContent = "Регистрация успешна!";
+                registerMessage.style.color = '#21a645';
+                registerMessage.innerText = 'Сейчас вы будете перенаправлены на главную страницу';
                 setTimeout(function() {
                     window.location.href = '/';
-                }, 3000);
+                }, 1500);
             } else {
-                messageElement.textContent = `Что-то не так, ошибка ${data.error}`;
-                messageElement.style.color = '#a62135';
+                registerMessage.textContent = `Что-то не так, ошибка ${data.error}`;
+                registerMessage.style.color = '#a62135';
             }
         });
     </script>
