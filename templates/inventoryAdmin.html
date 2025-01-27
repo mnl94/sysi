@@ -68,6 +68,13 @@
         </div>
         <div id="inventoryItemsError" class="error-message"></div>
     </div>
+    <div class="container">
+        <h2>Получить все инвентари пользователей в формате таблицы xslx</h2>
+        <div class="xslx-container">
+            <div class="element-container-xslx"><button type="button" id="generate-report-btn">Получить xslx файл</button></div>
+            <div class="element-container-xslx" id="container-dlya-skachat"></div>
+        </div>
+    </div>
     <div class="backToMain">На главную</div>
     <div id="responseText" style="display: none"></div> <!-- Костыль -->
     <script>
@@ -182,6 +189,29 @@
                 location.reload();
             } catch (error) {
                 document.getElementById('addItemError').innerText = `Ошибка: ${error.message || error}`;
+            }
+        });
+        document.getElementById('generate-report-btn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/generateReport', {
+                    method: 'GET'
+                });
+                if (!response.ok) {
+                    throw new Error(`Ошибка: ${response.statusText}`);
+                }
+                const disposition = response.headers.get('Content-Disposition');
+                let filename = 'report.xlsx';
+                const blobus = await response.blob();
+                const linkSkachat = document.createElement('a');
+                linkSkachat.href = URL.createObjectURL(blobus);
+                linkSkachat.download = filename;
+                linkSkachat.innerText = `Скачать: ${filename}`;
+                const containerLinka = document.getElementById('container-dlya-skachat');
+                containerLinka.innerHTML = '';
+                containerLinka.appendChild(linkSkachat);
+            } catch (error) {
+                const containerLinka = document.getElementById('container-dlya-skachat');
+                containerLinka.innerHTML = `<span>Ошибка: ${error.message}</span>`;
             }
         });
         document.querySelector('.backToMain').addEventListener('click', () => {
