@@ -36,6 +36,9 @@ def fix_requests_html():
 def inventory_requests_html():
     return render_template('inventoryRequests.html')
 
+@app.route('/orders')
+def orders_html():
+    return render_template('orders.html')
 
 
 if __name__ == '__main__':

@@ -14,6 +14,7 @@
             </div>
             <nav>
                 {% if session.get('username') %}
+                    <a href="/orders" class="references">Заказы</a>
                     <a href="/fixRequests" class="references">Запросы на починку</a>
                     <a href="/inventoryRequests" class="references">Запросы на назначение</a>
                     <a href="/inventory" class="references">Инвентарь</a>
