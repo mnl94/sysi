@@ -299,7 +299,7 @@ def create_order_api():
         if not valid_supplier(supplier):
             return jsonify({'error':'Invalid or missing supplier'}), 400
         
-        add_order(item_name, amount, price, supplier)
+        create_order(item_name, amount, price, supplier)
         return jsonify({'message':'Order created'}), 200
     return jsonify({'error':'No admin rights'}), 401
 
