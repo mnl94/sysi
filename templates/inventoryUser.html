@@ -20,8 +20,6 @@
     </div>
     <script>
         async function sendRequest(url, method, data = null) {
-            const errorContainer = document.getElementById('inventoryItemsError');
-            if (errorContainer) errorContainer.textContent = '';
             try {
                 const response = await fetch(url, {
                     method: method,
@@ -30,15 +28,15 @@
                     },
                     body: data ? JSON.stringify(data) : null
                 });
+
                 if (!response.ok) {
-                    const errorMessage = await response.text();
-                    if (errorContainer) errorContainer.textContent = `Ошибка: ${errorMessage}`;
-                    return null;
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
                 }
-                return await response.json();
+
+                const responseText = await response.json();
+                document.getElementById('responseText').textContent = JSON.stringify(responseText, null, 2);
             } catch (error) {
-                if (errorContainer) errorContainer.textContent = `Ошибка: ${error.message}`;
-                return null;
+                document.getElementById('responseText').textContent = `Error: ${error.message}`;
             }
         }
 

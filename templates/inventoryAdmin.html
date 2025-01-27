@@ -71,9 +71,7 @@
     <div class="backToMain">На главную</div>
     <div id="responseText" style="display: none"></div> <!-- Костыль -->
     <script>
-        async function sendRequest(url, method, data = null, errorContainerId = null) {
-            const errorContainer = errorContainerId ? document.getElementById(errorContainerId) : null;
-            if (errorContainer) errorContainer.textContent = '';
+        async function sendRequest(url, method, data = null) {
             try {
                 const response = await fetch(url, {
                     method: method,
@@ -82,15 +80,15 @@
                     },
                     body: data ? JSON.stringify(data) : null
                 });
+
                 if (!response.ok) {
-                    const errorMessage = await response.text();
-                    if (errorContainer) errorContainer.textContent = `Ошибка: ${errorMessage}`;
-                    return null;
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
                 }
-                return await response.json();
+
+                const responseText = await response.json();
+                document.getElementById('responseText').textContent = JSON.stringify(responseText, null, 2);
             } catch (error) {
-                if (errorContainer) errorContainer.textContent = `Ошибка: ${error.message}`;
-                return null;
+                document.getElementById('responseText').textContent = `Error: ${error.message}`;
             }
         }
 
