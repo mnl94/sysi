@@ -130,7 +130,8 @@
             }
         }
         //Проблема в функции выше, оно ретурнит internal server error, ты мб увидишь почему
-        document.getElementById('getRequestsAdmin').addEventListener('click', fetchRequestsAdmin);
+        const requestsAdmin = document.getElementById('getRequestsAdmin');
+        if (requestsAdmin) requestsAdmin.addEventListener('click', fetchRequestsAdmin);
         document.getElementById('requestForm').addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = {
@@ -139,6 +140,7 @@
             sendRequest('/api/requestFix', 'POST', formData);
         });
         document.querySelector('.backToMain').addEventListener('click', () => {
+            console.log('Э почему не возвращаешь');
             window.location.href = '/';
         });
     </script>
