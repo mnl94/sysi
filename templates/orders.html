@@ -58,6 +58,12 @@
             <div id="createOrderError" class="error-message"></div>
         </form>
     </div>
+    <div class="container">
+        <h2>Все заказы</h2>
+        <div id="orderContainer" class="order-list">
+        </div>
+        <div id="orderItemsError" class="error-message"></div>
+    </div>
     <div class="backToMain">На главную</div>
     <div id="responseText" style="display: none"></div>
     <script>
@@ -81,7 +87,53 @@
                 document.getElementById('responseText').textContent = `Error: ${error.message}`;
             }
         }
+        function renderOrderItems(items) {
+            const container = document.getElementById('orderContainer');
+            container.innerHTML = '';
 
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('inventory-item');
+                itemDiv.innerHTML = `
+                    <div>
+                        <label>ID</label>
+                        <span>${item[0]}</span>
+                    </div>
+                    <div>
+                        <label>Название</label>
+                        <span>${item[1]}</span>
+                    </div>
+                    <div>
+                        <label>Количество</label>
+                        <span>${item[2]}</span>
+                    </div>
+                    <div>
+                        <label>Цена</label>
+                        <span>${item[3]}</span>
+                    </div>
+                    <div>
+                        <label>Поставщик</label>
+                        <span>${item[4]}</span>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+        async function fetchOrders() {
+            try {
+                const response = await fetch('/api/getOrders');
+                if (!response.ok) {
+                    throw new Error(`Ошибка: ${response.statusText}`);
+                }
+                const data = await response.json();
+                renderOrderItems(data);
+            } catch (error) {
+                const errorMessage = document.getElementById('orderItemsError');
+                if (errorMessage) errorMessage.textContent = `Ошибка: ${error.message}`;
+                return null;
+            }
+        }
+        window.addEventListener('load', fetchOrders);
         document.getElementById('changeOrderForm').addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = {
@@ -92,7 +144,6 @@
             };
             try {
                 sendRequest('/api/changeOrder', 'POST', formData);
-                location.reload();
             } catch (error) {
                 document.getElementById('changeOrderError').innerText = `Ошибка: ${error.message || error}`;
             }
@@ -108,7 +159,6 @@
             };
             try {
                 sendRequest('/api/createOrder', 'POST', formData);
-                location.reload();
             } catch (error) {
                 document.getElementById('createOrderError').innerText = `Ошибка: ${error.message || error}`;
             }

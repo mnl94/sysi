@@ -129,7 +129,6 @@
                 document.getElementById(`response-request-${requestId}`).textContent = `Ошибка: ${error.message}`;
             }
         }
-        //Проблема в функции выше, оно ретурнит internal server error, ты мб увидишь почему
         const requestsAdmin = document.getElementById('getRequestsAdmin');
         if (requestsAdmin) requestsAdmin.addEventListener('click', fetchRequestsAdmin);
         document.getElementById('requestForm').addEventListener('submit', (event) => {
