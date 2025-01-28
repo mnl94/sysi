@@ -334,6 +334,15 @@ def change_order_api():
     return jsonify({'error':'No admin rights'}), 401
 
 
+@api_blueprint.route('/getOrders', methods=['GET'])
+def get_orders_api():
+    role = session.get('role')
+    if role == 'admin':
+        orders = get_orders()
+        return jsonify(orders), 200
+    return jsonify({'error':'No admin rights'}), 401
+
+
 @api_blueprint.route('/generateReport', methods=['GET'])
 def generate_report_api():
     role = session.get('role')

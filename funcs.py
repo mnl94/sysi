@@ -290,6 +290,13 @@ def change_order(order_id, item_name, amount, price, supplier):
         return 0
     return 1
 
+def get_orders():
+    with conn.cursor() as cursor:
+        query = "SELECT id, name, amount, price, supplier FROM orders"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        return result
+
 
 def create_excel(data):
     workbook = Workbook()
