@@ -3,9 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Заказы</title>
+    <link rel="stylesheet" href="/static/css/inventoryStyles.css">
 </head>
 <body>
-    test
+    <h1>План закупок</h1>
+    <div class="container">
+        <h2>Изменить заказ</h2>
+        <form class="forma" id="changeOrderForm">
+            <div class="row-container">
+                <div>
+                    <label for="change_order_id">ID</label>
+                    <input type="number" id="change_order_id" name="order_id" required>
+                </div>
+                <div>
+                    <label for="change_order_name">Название</label>
+                    <input type="text" id="change_order_name" name="order_name" required>
+                </div>
+                <div>
+                    <label for="change_amount">Кол-во</label>
+                    <input type="number" id="change_amount" name="amount" required>
+                </div>
+                <div>
+                    <label for="change_supplier">Поставщик</label>
+                    <input type="text" id="change_supplier" name="supplier" required>
+                </div>
+            </div>
+            <button type="submit">Отправить запрос</button>
+            <div id="changeOrderError" class="error-message"></div>
+        </form>
+    </div>
+    <div class="container">
+        <h2>Добавить заказ</h2>
+        <form class="forma" id="createOrderForm">
+            <div class="row-container">
+                <div>
+                    <label for="add_order_name">Название</label>
+                    <input type="text" id="add_order_name" name="name" required>
+                </div>
+                <div>
+                    <label for="add_amount">Количество</label>
+                    <input type="number" id="add_amount" name="amount" required>
+                </div>
+                <div>
+                    <label for="add_price">Цена</label>
+                    <input type="number" id="add_price" name="price" step="0.01" required>
+                </div>
+                <div>
+                    <label for="add_supplier">Поставщик</label>
+                    <input type="text" id="add_supplier" name="supplier" required>
+                </div>
+            </div>
+            <button type="submit">Отправить запрос</button>
+            <div id="createOrderError" class="error-message"></div>
+        </form>
+    </div>
+    <div class="backToMain">На главную</div>
+    <div id="responseText" style="display: none"></div>
+    <script>
+        async function sendRequest(url, method, data = null) {
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: data ? JSON.stringify(data) : null
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                }
+
+                const responseText = await response.json();
+                document.getElementById('responseText').textContent = JSON.stringify(responseText, null, 2);
+            } catch (error) {
+                document.getElementById('responseText').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        document.getElementById('changeOrderForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = {
+                item_id: parseInt(document.getElementById('change_order_id').value, 10),
+                item_name: document.getElementById('change_order_name').value,
+                amount: parseInt(document.getElementById('change_amount').value, 10),
+                supplier: document.getElementById('change_supplier').value
+            };
+            try {
+                sendRequest('/api/changeOrder', 'POST', formData);
+                location.reload();
+            } catch (error) {
+                document.getElementById('changeOrderError').innerText = `Ошибка: ${error.message || error}`;
+            }
+        });
+
+        document.getElementById('createOrderForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = {
+                item_name: document.getElementById('add_order_name').value,
+                amount: parseInt(document.getElementById('add_amount').value, 10),
+                price: parseFloat(document.getElementById('add_price').value),
+                supplier: document.getElementById('add_supplier').value
+            };
+            try {
+                sendRequest('/api/createOrder', 'POST', formData);
+                location.reload();
+            } catch (error) {
+                document.getElementById('createOrderError').innerText = `Ошибка: ${error.message || error}`;
+            }
+        });
+
+        document.querySelector('.backToMain').addEventListener('click', () => {
+            window.location.href = '/';
+        });
+    </script>
 </body>
 </html>
