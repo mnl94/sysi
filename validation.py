@@ -83,7 +83,7 @@ def valid_item_price(price):
     if not isinstance(price, int):
         return False
     
-    if not (0 <= amount <= MAX_INT_MYSQL):
+    if not (0 <= price <= MAX_INT_MYSQL):
         return False
     
     return True
