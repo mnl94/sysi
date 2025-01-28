@@ -111,6 +111,12 @@ def change_item_api():
         condition = data.get('condition')
         owned_by_user = data.get('owned_by')
 
+        if not valid_id(item_id):
+            return jsonify({'error':'Invalid or missing item_id'}), 400
+        
+        if not item_exists(item_id):
+            return jsonify({'error':'Item does not exist'}), 400
+
         if not valid_item_name(item_name):
             return jsonify({'error':'Invalid or missing item_name'}), 400
         
@@ -134,6 +140,31 @@ def change_item_api():
         if error:
             return jsonify({'error':'Unexpected error'}), 500
         return jsonify({'message':'Item changed successfully'}), 200
+
+    return jsonify({'error':'No admin rights'}), 401
+
+
+@api_blueprint.route('/deleteItem', methods=['POST'])
+def delete_item_api():
+    role = session.get('role')
+    if role == 'admin':
+        data = request.get_json()
+        if not data:
+            return jsonify({'error':'Invalid json provided'}), 400
+
+        item_id = data.get('item_id')
+        
+        if not valid_id(item_id):
+            return jsonify({'error':'Invalid or missing item_id'}), 400
+        
+        if not item_exists(item_id):
+            return jsonify({'error':'Item does not exist'}), 400
+
+        
+        error = delete_item(item_id)
+        if error:
+            return jsonify({'error':'Unexpected error'}), 500
+        return jsonify({'message':'Item deleted successfully'}), 200
 
     return jsonify({'error':'No admin rights'}), 401
 

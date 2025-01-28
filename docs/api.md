@@ -302,6 +302,16 @@
 }
 ```
 
+- Предмет не существует
+
+   код 400
+
+```json
+{
+  "error":"Item does not exist"
+}
+```
+
 - Ошибки валидации
 
    код 400
@@ -339,6 +349,64 @@
 ```json
 {
   "error": "Unexpected error"
+}
+```
+
+## /api/deleteItem
+
+удаляет предмет по id
+
+**Методы**: POST
+
+**Роль**: admin
+
+**Принимает**:
+
+```json
+{
+  "item_id":1
+}
+```
+
+**Возвращает**:
+
+- Успех:
+
+   код 200
+
+```json
+{
+  "message":"Item deleted successfully"
+}
+```
+
+- Предмет не существует
+
+   код 400
+  
+```json
+{
+  "error":"item does not exist"
+}
+```
+
+- Ошибки валидации
+
+   код 400
+
+```json
+{
+  "error":"Invalid or missing item_id"
+}
+```
+
+- Не авторизован
+
+   код 401
+
+```json
+{
+  "error":"No admin rights"
 }
 ```
 

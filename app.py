@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, redirect
 from api import api_blueprint
 from dotenv import load_dotenv
 import os
@@ -38,7 +38,10 @@ def inventory_requests_html():
 
 @app.route('/orders')
 def orders_html():
-    return render_template('orders.html')
+    role = session.get('role')
+    if role == 'admin':
+        return render_template('orders.html')
+    return redirect('/')
 
 
 if __name__ == '__main__':

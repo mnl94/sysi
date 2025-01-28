@@ -159,6 +159,18 @@ def change_item(item_id, name, amount, condition, owned_by_username):
         return 1
 
 
+def delete_item(item_id):
+    try:
+        with conn.cursor() as cursor:
+            query = "DELETE FROM inventory WHERE id = %s"
+            cursor.execute(query,(item_id,))
+            conn.commit()
+            return 0
+    except Exception as e:
+        print(e)
+        return 1
+
+
 def item_owned_by(item_id):
     with conn.cursor() as cursor:
         query = "SELECT owned_by FROM inventory WHERE id = %s"
