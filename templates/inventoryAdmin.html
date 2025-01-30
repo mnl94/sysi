@@ -147,7 +147,6 @@
             });
         }
         async function deleteItem(itemId) {
-            console.log(itemId);
                 try {
                     const response = await fetch('/api/deleteItem', {
                         method: 'POST',
@@ -156,7 +155,6 @@
                         },
                         body: JSON.stringify({ item_id: parseInt(itemId, 10) })
                     });
-                    console.log(response, 'responsik');
                     if (!response.ok) {
                         throw new Error(`Ошибка: ${response.statusText}`);
                     }
@@ -220,7 +218,7 @@
                 sendRequest('/api/addItem', 'POST', formData);
                 setTimeout(() => {
                     location.reload();
-                }, 250); console.log(formData);
+                }, 250);
             } catch (error) {
                 document.getElementById('addItemError').innerText = `Ошибка: ${error.message || error}`;
             }

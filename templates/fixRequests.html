@@ -15,6 +15,7 @@
             <button type="button" id="getRequestsAdmin">Отправить запрос</button>
         </form>
         <div id="requestsContainer" class="requests-list"></div>
+        <div id="requestsError" class="error-message"></div>
     </div>
     {% endif %}
     <div class="container">
@@ -29,6 +30,11 @@
             <button type="submit">Отправить запрос</button>
         </form>
     </div> 
+    <div class="container">
+        <h2>Мои запросы на починку</h2>
+        <div id = "myRequestsContainer" class="requests-list"></div>
+        <div id="myRequestsError" class="error-message"></div>
+    </div>
     <div class="backToMain">На главную</div>
     <div id="responseText" style="display: none"></div> <!-- Костыль -->
     <script>
@@ -52,7 +58,55 @@
                 document.getElementById('responseText').textContent = `Error: ${error.message}`;
             }
         }
+        function renderMyRequests(items) {
+            const container = document.getElementById('myRequestsContainer');
+            container.innerHTML = '';
+            const perevodchik = {
+                'pending': 'Ожидание',
+                'approved': 'Принято',
+                'declined': 'Отклонено'
+            };
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('requests-item');
+                const status = perevodchik[item[3]] || item[3];
+                itemDiv.innerHTML = `
+                    <div>
+                        <label>ID</label>
+                        <span>${item[0]}</span>
+                    </div>
+                    <div>
+                        <label>Пользователь</label>
+                        <span>${item[1]}</span>
+                    </div>
+                    <div>
+                        <label>ID предмета</label>
+                        <span>${item[2]}</span>
+                    </div>
+                    <div>
+                        <label>Статус</label>
+                        <span>${status}</span>
+                    </div>
+                    <div id="response-request-${item[0]}"></div>
 
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+        async function fetchMyRequests() {
+            try {
+                const response = await fetch('/api/getMyFixRequests');
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                renderMyRequests(data);
+            } catch (error) {
+                document.getElementById('myRequestsError').textContent = `Ошибка: ${error.message}`;
+            }
+        }
+        window.addEventListener('load', fetchMyRequests);
         function renderRequests(items) {
             const container = document.getElementById('requestsContainer');
             container.innerHTML = '';
@@ -113,7 +167,7 @@
                 const data = await response.json();
                 renderRequests(data);
             } catch (error) {
-                document.getElementById('responseText').textContent = `Ошибка: ${error.message}`;
+                document.getElementById('requestsError').textContent = `Ошибка: ${error.message}`;
             }
         }
 
@@ -137,6 +191,9 @@
                 item_id: parseInt(document.getElementById('request_id').value, 10),
             };
             sendRequest('/api/requestFix', 'POST', formData);
+            setTimeout(() => {
+                    location.reload();
+            }, 250);
         });
         document.querySelector('.backToMain').addEventListener('click', () => {
             window.location.href = '/';
