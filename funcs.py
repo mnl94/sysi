@@ -197,15 +197,15 @@ def get_pending_fix_requests():
 
 def get_user_fixrequests(user_id):
     with conn.cursor() as cursor:
-        query = "SELECT id, user_id, message, request_status FROM fix_requests WHERE user_id = %s"
+        query = "SELECT id, user_id, item_id, request_status FROM fix_requests WHERE user_id = %s"
         cursor.execute(query,(user_id,))
         result = cursor.fetchall()
         for idx, request in enumerate(result):
             request_id = request[0]
             username = get_username(request[1])
-            message = request[2]
+            item_id = request[2]
             request_status = request[3]
-            result[idx] = [request_id, username, message, request_status]
+            result[idx] = [request_id, username, item_id, request_status]
         return result
 
 
