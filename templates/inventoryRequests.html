@@ -194,6 +194,9 @@
                 message: document.getElementById('request_message').value,
             };
             sendRequest('/api/requestInventory', 'POST', formData);
+            setTimeout(() => {
+                    location.reload();
+            }, 250);
         });
         document.querySelector('.backToMain').addEventListener('click', () => {
             window.location.href = '/';
