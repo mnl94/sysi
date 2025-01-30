@@ -61,6 +61,10 @@
         function renderMyRequests(items) {
             const container = document.getElementById('myInventoryRequestsContainer');
             container.innerHTML = '';
+            if (items.length == 0) {
+                container.textContent = 'Пока нет ничего. Добавьте запрос и отследите его прогресс.';
+                return;
+            }
             const perevodchik = {
                 'pending': 'Ожидание',
                 'approved': 'Принято',

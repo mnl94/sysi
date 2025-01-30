@@ -43,6 +43,10 @@
         function renderInventoryItems(items) {
             const container = document.getElementById('inventoryContainer');
             container.innerHTML = '';
+            if (items.length == 0) {
+                container.textContent = 'Пока нет ничего. Вы можете запросить предмет у администратора.';
+                return;
+            }
 
             items.forEach(item => {
                 const itemDiv = document.createElement('div');
