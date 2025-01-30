@@ -389,3 +389,25 @@ def generate_report_api():
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
     return jsonify({'error':'No admin rights'}), 401
+
+
+@api_blueprint.route('/getMyInventoryRequests')
+def get_my_inventory_requests_api():
+    role = session.get('role')
+    if role:
+        username = session.get('username')
+        uid = get_id(username)
+        requests = get_user_inv_requests(uid)
+        return jsonify(requests), 200
+    return jsonify({'error':'Unauthorized'}), 401
+
+
+@api_blueprint.route('/getMyFixRequests')
+def get_my_fix_requests_api():
+    role = session.get('role')
+    if role:
+        username = session.get('username')
+        uid = get_id(username)
+        requests = get_user_fix_requests(uid)
+        return jsonify(requests), 200
+    return jsonify({'error':'Unauthorized'}), 401

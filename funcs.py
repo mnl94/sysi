@@ -195,6 +195,20 @@ def get_pending_fix_requests():
         return result
 
 
+def get_user_fixrequests(user_id):
+    with conn.cursor() as cursor:
+        query = "SELECT id, user_id, message, request_status FROM fix_requests WHERE user_id = %s"
+        cursor.execute(query,(user_id,))
+        result = cursor.fetchall()
+        for idx, request in enumerate(result):
+            request_id = request[0]
+            username = get_username(request[1])
+            message = request[2]
+            request_status = request[3]
+            result[idx] = [request_id, username, message, request_status]
+        return result
+
+
 def is_fix_request_pending(request_id):
     with conn.cursor() as cursor:
         query = "SELECT id FROM fix_requests WHERE id = %s"
@@ -237,6 +251,19 @@ def get_pending_inventory_requests():
     with conn.cursor() as cursor:
         query = "SELECT id, user_id, message, request_status FROM inventory_requests WHERE request_status = 'pending'"
         cursor.execute(query)
+        result = cursor.fetchall()
+        for idx, request in enumerate(result):
+            request_id = request[0]
+            username = get_username(request[1])
+            message = request[2]
+            request_status = request[3]
+            result[idx] = [request_id, username, message, request_status]
+        return result
+
+def get_user_inv_requests(user_id):
+    with conn.cursor() as cursor:
+        query = "SELECT id, user_id, message, request_status FROM inventory_requests WHERE user_id = %s"
+        cursor.execute(query,(user_id,))
         result = cursor.fetchall()
         for idx, request in enumerate(result):
             request_id = request[0]
