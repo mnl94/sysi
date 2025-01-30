@@ -195,7 +195,7 @@ def get_pending_fix_requests():
         return result
 
 
-def get_user_fixrequests(user_id):
+def get_user_fix_requests(user_id):
     with conn.cursor() as cursor:
         query = "SELECT id, user_id, item_id, request_status FROM fix_requests WHERE user_id = %s"
         cursor.execute(query,(user_id,))
