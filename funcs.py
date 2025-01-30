@@ -198,7 +198,7 @@ def get_pending_fix_requests():
 def is_fix_request_pending(request_id):
     with conn.cursor() as cursor:
         query = "SELECT id FROM fix_requests WHERE id = %s"
-        cursor.execute(query, (id,))
+        cursor.execute(query, (request_id,))
         result = cursor.fetchone()
         if result is None:
             return False
@@ -208,8 +208,8 @@ def is_fix_request_pending(request_id):
 
 def approve_fix_request(request_id):
     with conn.cursor() as cursor:
-        query = "UPDATE fix_requests SET request_status = %s WHERE id = %s"
-        cursor.execute(query,(request_id,'approved'))
+        query = "UPDATE fix_requests SET request_status = 'approved' WHERE id = %s"
+        cursor.execute(query,(request_id,))
         conn.commit()
         return 0
     return 1
@@ -217,8 +217,8 @@ def approve_fix_request(request_id):
 
 def deny_fix_request(request_id):
     with conn.cursor() as cursor:
-        query = "UPDATE fix_requests SET request_status = %s WHERE id = %s"
-        cursor.execute(query,(request_id,'declined'))
+        query = "UPDATE fix_requests SET request_status = 'declined' WHERE id = %s"
+        cursor.execute(query,(request_id,))
         conn.commit()
         return 0
     return 1
