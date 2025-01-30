@@ -140,7 +140,7 @@ h1 {
     color: red;
     margin-top: 10px;
 }
-.approve-btn, .deny-btn {
+.approve-btn, .deny-btn, .delete-btn {
     padding: 10px 20px;
     font-size: 15px;
     color: #f7fce6;

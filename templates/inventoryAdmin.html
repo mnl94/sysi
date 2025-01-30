@@ -98,7 +98,6 @@
                 document.getElementById('responseText').textContent = `Error: ${error.message}`;
             }
         }
-
         function renderInventoryItems(items) {
             const container = document.getElementById('inventoryContainer');
             container.innerHTML = '';
@@ -106,12 +105,13 @@
                 'new': 'Новый',
                 'used': 'Используемый',
                 'broken': 'Сломавшийся'
-            }
+            };
 
             items.forEach(item => {
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('inventory-item');
-                const translatedCondition = perevodchik[item[3]] || item[3]; //Добавил если вдруг не будет такого кондишна
+                const translatedCondition = perevodchik[item[3]] || item[3];
+
                 itemDiv.innerHTML = `
                     <div>
                         <label>ID</label>
@@ -133,10 +133,40 @@
                         <label>Принадлежность</label>
                         <span>${item[4]}</span>
                     </div>
+                    <button class="delete-btn" data-id="${item[0]}">Удалить</button>
                 `;
+
                 container.appendChild(itemDiv);
             });
+
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    const itemId = event.target.getAttribute('data-id');
+                    await deleteItem(itemId);
+                });
+            });
         }
+        async function deleteItem(itemId) {
+            console.log(itemId);
+                try {
+                    const response = await fetch('/api/deleteItem', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ item_id: parseInt(itemId, 10) })
+                    });
+                    console.log(response, 'responsik');
+                    if (!response.ok) {
+                        throw new Error(`Ошибка: ${response.statusText}`);
+                    }
+
+                    await fetchInventoryAdmin();
+                } catch (error) {
+                    console.log(`Ошибка при удалении: ${error.message}`);
+                }
+            }
+
         async function fetchInventoryAdmin() {
             try {
                 const response = await fetch('/api/getInventoryAdmin');
