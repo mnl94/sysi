@@ -250,7 +250,7 @@ def get_pending_inventory_requests():
 def is_inventory_request_pending(request_id):
     with conn.cursor() as cursor:
         query = "SELECT id FROM inventory_requests WHERE id = %s AND request_status = 'pending'"
-        cursor.execute(query, (id,))
+        cursor.execute(query, (request_id,))
         result = cursor.fetchone()
         if result is None:
             return False
@@ -260,8 +260,9 @@ def is_inventory_request_pending(request_id):
 
 def approve_inventory_request(request_id):
     with conn.cursor() as cursor:
-        query = "UPDATE inventory_requests SET request_status = %s WHERE id = %s"
-        cursor.execute(query,(request_id,'approved'))
+        query = "UPDATE inventory_requests SET request_status = 'approved' WHERE id = %s"
+        print(request_id)
+        cursor.execute(query,(request_id,))
         conn.commit()
         return 0
     return 1
@@ -269,8 +270,9 @@ def approve_inventory_request(request_id):
 
 def deny_inventory_request(request_id):
     with conn.cursor() as cursor:
-        query = "UPDATE inventory_requests SET request_status = %s WHERE id = %s"
-        cursor.execute(query,(request_id,'declined'))
+        query = "UPDATE inventory_requests SET request_status = 'declined' WHERE id = %s"
+        print(request_id)
+        cursor.execute(query,(request_id,))
         conn.commit()
         return 0
     return 1
