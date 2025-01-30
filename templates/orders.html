@@ -137,13 +137,16 @@
         document.getElementById('changeOrderForm').addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = {
-                item_id: parseInt(document.getElementById('change_order_id').value, 10),
+                id: parseInt(document.getElementById('change_order_id').value, 10),
                 item_name: document.getElementById('change_order_name').value,
                 amount: parseInt(document.getElementById('change_amount').value, 10),
                 supplier: document.getElementById('change_supplier').value
             };
             try {
                 sendRequest('/api/changeOrder', 'POST', formData);
+                setTimeout(() => {
+                    location.reload();
+                }, 250);
             } catch (error) {
                 document.getElementById('changeOrderError').innerText = `Ошибка: ${error.message || error}`;
             }
@@ -159,6 +162,9 @@
             };
             try {
                 sendRequest('/api/createOrder', 'POST', formData);
+                setTimeout(() => {
+                    location.reload();
+                }, 250);
             } catch (error) {
                 document.getElementById('createOrderError').innerText = `Ошибка: ${error.message || error}`;
             }
