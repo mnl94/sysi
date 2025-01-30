@@ -137,7 +137,7 @@
         document.getElementById('changeOrderForm').addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = {
-                item_id: parseInt(document.getElementById('change_order_id').value, 10),
+                id: parseInt(document.getElementById('change_order_id').value, 10),
                 item_name: document.getElementById('change_order_name').value,
                 amount: parseInt(document.getElementById('change_amount').value, 10),
                 supplier: document.getElementById('change_supplier').value
