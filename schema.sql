@@ -28,18 +28,18 @@ CREATE TABLE IF NOT EXISTS orders (
 CREATE TABLE IF NOT EXISTS inventory_requests (
     -- заявки на получение инвентаря
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT,
     message VARCHAR(512) DEFAULT NULL,
     request_status ENUM('pending','approved','declined') NOT NULL DEFAULT 'pending', -- отслеживание статуса заявок на получение инвентаря
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS fix_requests (
     -- заявки о необходимости ремонта или замены инвентаря;
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT,
     item_id INT NOT NULL,
     request_status ENUM('pending','approved','declined') NOT NULL DEFAULT 'pending',
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (item_id) REFERENCES inventory(id)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (item_id) REFERENCES inventory(id) ON DELETE CASCADE
 );
