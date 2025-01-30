@@ -84,7 +84,7 @@ def add_item_api():
         if not valid_item_amount(amount):
             return jsonify({'error': 'Invalid or missing amount'}), 400
         
-        if owned_by_username == 'null':
+        if owned_by_username == 'null' or owned_by_username == 'Не привязано' or owned_by_username == '':
             owned_by_username = None # kostyl
         elif not user_exists(owned_by_username):
             return jsonify({'error':'User does not exist'}), 400
@@ -126,7 +126,7 @@ def change_item_api():
         if not valid_item_condition(condition):
             return jsonify({'error':'Invalid or missing condition'}), 400
 
-        if owned_by_user == 'null' or owned_by_user == '':
+        if owned_by_user == 'null' or owned_by_user == '' or owned_by_user == 'Не привязано':
             owned_by_user = None #kostyl
 
         elif not valid_username(owned_by_user):
