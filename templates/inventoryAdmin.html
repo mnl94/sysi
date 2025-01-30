@@ -197,6 +197,9 @@
             };
             try {
                 sendRequest('/api/changeItem', 'POST', formData);
+                setTimeout(() => {
+                    location.reload();
+                }, 250);
             } catch (error) {
                 document.getElementById('changeItemError').innerText = `Ошибка: ${error.message || error}`;
             }
@@ -215,6 +218,9 @@
             };
             try {
                 sendRequest('/api/addItem', 'POST', formData);
+                setTimeout(() => {
+                    location.reload();
+                }, 250); console.log(formData);
             } catch (error) {
                 document.getElementById('addItemError').innerText = `Ошибка: ${error.message || error}`;
             }
