@@ -354,3 +354,11 @@ def create_excel(data):
     workbook.save(output)
     output.seek(0)
     return output
+
+
+def autocomplete(usernameStart):
+    with conn.cursor() as cursor:
+        query = "SELECT username FROM users WHERE username LIKE %s ORDER BY username LIMIT 5"
+        cursor.execute(query, (usernameStart+'%',))
+        result = cursor.fetchall()
+        return result

@@ -411,3 +411,24 @@ def get_my_fix_requests_api():
         requests = get_user_fix_requests(uid)
         return jsonify(requests), 200
     return jsonify({'error':'Unauthorized'}), 401
+
+
+@api_blueprint.route('/autocomplete', methods=['POST'])
+def autocomplete_api():
+    role = session.get('role')
+    if role == 'admin':
+        
+        data = request.get_json()
+
+        if not data:
+            return jsonify({'error':'Invalid json provided'}), 400
+        
+        usernameStart = data.get('user')
+
+        if valid_username(usernameStart) or usernameStart == '':
+            result = autocomplete(usernameStart)
+            return jsonify(result)
+        else:
+            return jsonify({'error':'Invalid or missing user'}), 400
+
+    return jsonify({'error':'No admin rights'}), 401
