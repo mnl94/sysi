@@ -17,7 +17,7 @@
         <div id="requestsContainer" class="requests-list"></div>
         <div id="requestsError" class="error-message"></div>
     </div>
-    {% endif %}
+    {% else %}
     <div class="container">
         <h2>Отправить запрос на починку</h2>
         <form class="forma" id="requestForm">
@@ -35,6 +35,7 @@
         <div id = "myRequestsContainer" class="requests-list"></div>
         <div id="myRequestsError" class="error-message"></div>
     </div>
+    {% endif %}
     <div class="backToMain">На главную</div>
     <div id="responseText" style="display: none"></div> <!-- Костыль -->
     <script>
@@ -107,7 +108,8 @@
                 const data = await response.json();
                 renderMyRequests(data);
             } catch (error) {
-                document.getElementById('myRequestsError').textContent = `Ошибка: ${error.message}`;
+                const myErrorRequest = document.getElementById('myRequestsError');
+                if (myErrorRequest) myErrorRequest.textContent = `Ошибка: ${error.message}`;
             }
         }
         window.addEventListener('load', fetchMyRequests);
@@ -189,7 +191,8 @@
         }
         const requestsAdmin = document.getElementById('getRequestsAdmin');
         if (requestsAdmin) requestsAdmin.addEventListener('click', fetchRequestsAdmin);
-        document.getElementById('requestForm').addEventListener('submit', (event) => {
+        const formaRequest = document.getElementById('requestForm');
+        if (formaRequest) formaRequest.addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = {
                 item_id: parseInt(document.getElementById('request_id').value, 10),

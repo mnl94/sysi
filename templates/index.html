@@ -14,7 +14,10 @@
             </div>
             <nav>
                 {% if session.get('username') %}
+                    {% if session.get('role') == 'admin' %}
                     <a href="/orders" class="references">Заказы</a>
+                    {% endif %}
+                
                     <a href="/fixRequests" class="references">Запросы на починку</a>
                     <a href="/inventoryRequests" class="references">Запросы на назначение</a>
                     <a href="/inventory" class="references">Инвентарь</a>

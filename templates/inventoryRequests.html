@@ -17,7 +17,7 @@
         <div id="requestsContainer" class="requests-list"></div>
         <div id="errorMessageInventoryRequests" class="error-message"></div>
     </div>
-    {% endif %}
+    {% else %}
     <div class="container">
         <h2>Отправить запрос на назначение инвентаря</h2>
         <form class="forma" id="requestForm">
@@ -35,6 +35,7 @@
         <div id="myInventoryRequestsContainer" class="requests-list"></div>
         <div id="myInventoryRequestsError" class="error-message"></div>
     </div>
+    {% endif %}
     <div class="backToMain">На главную</div>
     <div id="responseText" style="display: none"></div> <!-- Костыль -->
     <script>
@@ -106,7 +107,8 @@
                 const data = await response.json();
                 renderMyRequests(data);
             } catch (error) {
-                document.getElementById('myInventoryRequestsError').textContent = `Ошибка: ${error.message}`;
+                const errorRequests = document.getElementById('myInventoryRequestsError');
+                if (errorRequests) errorRequests.textContent = `Ошибка: ${error.message}`;
             }
         }
         window.addEventListener('load', fetchMyRequests);
@@ -188,7 +190,8 @@
 
         const requestsAdmin = document.getElementById('getRequestsAdmin');
         if (requestsAdmin) requestsAdmin.addEventListener('click', fetchRequestsAdmin);
-        document.getElementById('requestForm').addEventListener('submit', (event) => {
+        const formaRequest = document.getElementById('requestForm');
+        if (formaRequest) formaRequest.addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = {
                 message: document.getElementById('request_message').value,

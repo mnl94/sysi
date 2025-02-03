@@ -101,6 +101,10 @@
         function renderInventoryItems(items) {
             const container = document.getElementById('inventoryContainer');
             container.innerHTML = '';
+            if (items.length == 0) {
+                container.textContent = 'Пока нет ничего. Добавьте предмет.';
+                return;
+            }
             const perevodchik = {
                 'new': 'Новый',
                 'used': 'Используемый',

@@ -47,11 +47,15 @@
                 container.textContent = 'Пока нет ничего. Вы можете запросить предмет у администратора.';
                 return;
             }
-
+            const perevodchik = {
+                'new': 'Новый',
+                'used': 'Используемый',
+                'broken': 'Сломавшийся'
+            };
             items.forEach(item => {
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('inventory-item');
-
+                const perevodnoi = perevodchik[item[3]] || item[3];
                 itemDiv.innerHTML = `
                     <div>
                         <label>ID</label>
@@ -67,7 +71,7 @@
                     </div>
                     <div>
                         <label>Состояние</label>
-                        <span>${item[3]}</span>
+                        <span>${perevodnoi}</span>
                     </div>
                 `;
                 container.appendChild(itemDiv);
