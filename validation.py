@@ -1,5 +1,6 @@
 BLACKLISTED_CHARACTERS = {'$', '%', '@', '#', '&', '*', '!', '(', ')', '+', '=', '{', '}', '[', ']', '<', '>', ';', ':', ' '}
 BLACKLISTED_CHARACTERS_MESSAGE = {'$', '%', '@', '#', '*', '{', '}', '[', ']', '<', '>', ';'}
+BLACKLISTED_CHARACTERS_ITEM_NAME = {'$', '@', '#', '&', '=', '{', '}', '[', ']', '<', '>', ';'}
 MIN_PASSW_LEN = 4
 MAX_PASSW_LEN = 60
 MIN_USERNAME_LEN = 1
@@ -57,7 +58,7 @@ def valid_item_name(item_name):
     if not (1 <= len(item_name) <= 128):
         return False
     
-    if any(char in BLACKLISTED_CHARACTERS for char in item_name):
+    if any(char in BLACKLISTED_CHARACTERS_ITEM_NAME for char in item_name):
         return False
     
     return True
