@@ -25,6 +25,10 @@
                     <input type="number" id="change_amount" name="amount" required>
                 </div>
                 <div>
+                    <label for="change_price">Цена</label>
+                    <input type="number" id="change_price" name="price" required>
+                </div>
+                <div>
                     <label for="change_supplier">Поставщик</label>
                     <input type="text" id="change_supplier" name="supplier" required>
                 </div>
@@ -144,13 +148,14 @@
                 id: parseInt(document.getElementById('change_order_id').value, 10),
                 item_name: document.getElementById('change_order_name').value,
                 amount: parseInt(document.getElementById('change_amount').value, 10),
+                price: parseInt(document.getElementById('change_price').value, 10),
                 supplier: document.getElementById('change_supplier').value
             };
             try {
                 sendRequest('/api/changeOrder', 'POST', formData);
-                setTimeout(() => {
-                    location.reload();
-                }, 250);
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 250);
             } catch (error) {
                 document.getElementById('changeOrderError').innerText = `Ошибка: ${error.message || error}`;
             }
@@ -166,9 +171,9 @@
             };
             try {
                 sendRequest('/api/createOrder', 'POST', formData);
-                setTimeout(() => {
-                    location.reload();
-                }, 250);
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 250);
             } catch (error) {
                 document.getElementById('createOrderError').innerText = `Ошибка: ${error.message || error}`;
             }

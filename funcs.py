@@ -323,10 +323,10 @@ def create_order(item_name, amount, price, supplier):
     return 1
 
 
-def change_order(order_id, item_name, amount, price, supplier):
+def change_order(order_id, name, amount, price, supplier):
     with conn.cursor() as cursor:
         query = "UPDATE orders SET item_name = %s, amount = %s, price = %s, supplier = %s WHERE id = %s"
-        cursor.execute(query, (item_name, amount, price, supplier, order_id))
+        cursor.execute(query, (name, amount, price, supplier, order_id))
         conn.commit()
         return 0
     return 1
