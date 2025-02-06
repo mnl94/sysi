@@ -12,6 +12,25 @@ MYSQL_USER = os.getenv('MYSQL_USER')
 MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
 MYSQL_DATABASE = os.getenv('MYSQL_DATABASE')
 
+# Подключение к базе данных
+conn = mysql.connector.connect(
+    host="localhost",
+    user=MYSQL_USER,
+    password=MYSQL_PASSWORD,
+    database=MYSQL_DATABASE
+)
+
+curs = conn.cursor()
+
+with open('schema.sql', 'r') as file:
+    sql = file.read()
+
+# читаем схему и создаём 
+curs.execute(sql, multi=True)
+curs.close()
+
+#почему-то после того как я запускаю schema.sql у меня закрывается соединение, поэтому закрываем и переоткрываем
+conn.close()
 conn = mysql.connector.connect(
     host="localhost",
     user=MYSQL_USER,
@@ -304,10 +323,10 @@ def create_order(item_name, amount, price, supplier):
     return 1
 
 
-def change_order(order_id, name, amount, price, supplier):
+def change_order(order_id, item_name, amount, price, supplier):
     with conn.cursor() as cursor:
-        query = "UPDATE orders SET item_name = %s, amount = %s, price = %s, supplier = %s WHERE id = %s"
-        cursor.execute(query, (name, amount, price, supplier, order_id))
+        query = "UPDATE orders SET name = %s, amount = %s, price = %s, supplier = %s WHERE id = %s"
+        cursor.execute(query, (item_name, amount, price, supplier, order_id))
         conn.commit()
         return 0
     return 1

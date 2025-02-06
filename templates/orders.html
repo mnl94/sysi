@@ -153,9 +153,9 @@
             };
             try {
                 sendRequest('/api/changeOrder', 'POST', formData);
-                // setTimeout(() => {
-                //     location.reload();
-                // }, 250);
+                setTimeout(() => {
+                    location.reload();
+                }, 250);
             } catch (error) {
                 document.getElementById('changeOrderError').innerText = `Ошибка: ${error.message || error}`;
             }
@@ -171,9 +171,9 @@
             };
             try {
                 sendRequest('/api/createOrder', 'POST', formData);
-                // setTimeout(() => {
-                //     location.reload();
-                // }, 250);
+                setTimeout(() => {
+                    location.reload();
+                }, 250);
             } catch (error) {
                 document.getElementById('createOrderError').innerText = `Ошибка: ${error.message || error}`;
             }
