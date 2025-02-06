@@ -12,25 +12,6 @@ MYSQL_USER = os.getenv('MYSQL_USER')
 MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
 MYSQL_DATABASE = os.getenv('MYSQL_DATABASE')
 
-# Подключение к базе данных
-conn = mysql.connector.connect(
-    host="localhost",
-    user=MYSQL_USER,
-    password=MYSQL_PASSWORD,
-    database=MYSQL_DATABASE
-)
-
-curs = conn.cursor()
-
-with open('schema.sql', 'r') as file:
-    sql = file.read()
-
-# читаем схему и создаём 
-curs.execute(sql, multi=True)
-curs.close()
-
-#почему-то после того как я запускаю schema.sql у меня закрывается соединение, поэтому закрываем и переоткрываем
-conn.close()
 conn = mysql.connector.connect(
     host="localhost",
     user=MYSQL_USER,
