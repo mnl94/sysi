@@ -33,3 +33,22 @@
 - **Система контроля версий**: Git.
 - **Автоматическая установка**: скрипты для развёртывания на целевой машине.
 
+## Установка
+1. Установите mysql server ([Инструкция](https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en))
+2. Создайте базу данных для сайта и создайте пользователя с доступом к бд. Пример:
+```mysql
+CREATE DATABASE your_db;
+CREATE USER 'your_username'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL ON your_db.* to 'your_username'@'localhost';
+```
+3. создайте файл под названием `.env` и заполните его (пример заполнения в файле `.env.example`)
+4. Установите все нужные библиотеки
+```bash
+pip install -r requirements.txt
+```
+5. Запустите `setup.py`
+6. Запустите сайт
+```bash
+flask run
+```
+7. Готово!

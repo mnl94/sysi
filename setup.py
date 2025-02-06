@@ -26,6 +26,7 @@ with conn.cursor() as cursor:
 
         for res in cursor.execute(sql, multi=True):
             pass
+        print('tables created')
     except Exception as e:
         print('Error while creating tables:', e)
 
@@ -34,7 +35,8 @@ with conn.cursor() as cursor:
         query = "INSERT INTO users (username, password, role) VALUES (%s, %s, 'admin')"
         cursor.execute(query, (ADMIN_USERNAME,hash_pass(ADMIN_PASSWORD)))
         conn.commit()
+        print('admin created')
     except Exception as e:
-        print('Error while creating admin user:',e)
+        print('Error while creating admin user:   ',e)
 
 conn.close()
