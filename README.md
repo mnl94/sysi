@@ -34,7 +34,7 @@
 - **Автоматическая установка**: скрипты для развёртывания на целевой машине.
 
 ## Ссылка на видео
-- https://drive.google.com/file/d/1n9PWwrjkEK1dZm8JzrusMzcm46zi2G21/view?usp=sharing
+- https://vkvideo.ru/video543043630_456239026?list=ln-7Q5zvOaFZseNIUJqgZ
 
 ## Установка
 1. Установите mysql server ([Инструкция](https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en))
