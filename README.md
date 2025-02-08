@@ -33,6 +33,9 @@
 - **Система контроля версий**: Git.
 - **Автоматическая установка**: скрипты для развёртывания на целевой машине.
 
+## Ссылка на видео
+- https://drive.google.com/file/d/1n9PWwrjkEK1dZm8JzrusMzcm46zi2G21/view?usp=sharing
+
 ## Установка
 1. Установите mysql server ([Инструкция](https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en))
 2. Создайте базу данных для сайта и создайте пользователя с доступом к бд. Пример:
